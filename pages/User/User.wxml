@@ -1,0 +1,78 @@
+<view wx:if="{{userInfo}}" class="back_img">
+  <image src="{{userInfo.bgUrl}}" mode="aspectFill"></image>
+</view>
+<view wx:else class="back_img">
+  <image src="{{unLoginUrl_bg}}" mode="aspectFill"></image>
+</view>
+<view style="height: 650rpx;width: 100%;"></view>
+<view wx:if="{{userInfo}}">
+<view class="hand_img">
+  <view  style="width: 100%; height: 50rpx;"></view>
+  <view class="hand" plain >
+    <image bind:tap="toDetail" src="{{userInfo.imgHand}}" style="width: 200rpx;height: 200rpx;border-radius: 50%; border:none; margin-bottom:150rpx ;" mode="aspectFill"></image>
+  </view>
+</view>
+<view class="hand_name">{{userInfo.Name}}</view>
+<scroll-view style="height: 75vh;width: 100%; background-color: rgba(255, 255, 255, 0.91); " scroll-y bounces enhanced>
+  
+  <view style="width: 100%;height: 50rpx;"></view>
+  <view class="list">
+    <view class="list_1">
+      <view bind:tap="To_Love" class="list_content" plain>
+      <view style="height: 70%;width: 100%;">
+        <image style="height: 90%; width: 90%; padding-left: 8%;" src="/image/love1.png" mode="aspectFill"></image>
+      </view>
+      <view style="height: 30%;width: 100%;">
+        <view style="height: 30%;width: 100%;display: flex;align-items: center;justify-content: center;">收 藏</view>
+      </view>
+      </view>
+      <!--  -->
+      <view class="list_content" plain bind:tap="To_LiShi">
+      <view style="height: 70%;width: 100%;">
+        <image style="height: 90%; width: 90%; padding-left: 8%;" src="/image/LiShi.png" mode="aspectFit"></image>
+      </view>
+      <view style="height: 30%;width: 100%;">
+        <view style="height: 30%;width: 100%;display: flex;align-items: center;justify-content: center;">历 史</view>
+      </view>
+      </view>
+      <!--  -->
+      <view class="list_content" plain bind:tap="toDetail">
+      <view style="height: 70%;width: 100%;">
+        <image style="height: 60%; width: 85%; padding-left: 8%;" src="/image/My.png" mode="aspectFit"></image>
+      </view>
+      <view style="height: 30%;width: 100%;">
+        <view style="height: 30%;width: 100%;display: flex;align-items: center;justify-content: center;">我 的</view>
+      </view>
+      </view>
+      <!-- end -->
+    </view>
+    
+    
+  </view>
+  <view style="width: 100%;height: 300rpx;"></view>
+  
+  <button style="width: 70%;" type="primary" open-type="contact">在线客服</button>
+<button style="width: 70%;" type="primary" open-type="openSetting">授权设置</button>
+<button style="width: 70%;" type="primary" open-type="feedback">投诉建议</button>
+<button style="width: 70%;" wx:if="{{userInfo}}" type="primary" bindtap="outLogin">退出登录</button>
+</scroll-view>
+
+
+</view>
+<view wx:else>
+  <view class="hand_img">
+  <view style="width: 100%; height: 50rpx;"></view>
+  <view class="hand" plain>
+    <image bind:tap="toDetail" src="{{unLoginUrl}}" style="width: 200rpx;height: 200rpx;border-radius: 50%; border:none; margin-bottom:150rpx ;"></image>
+  </view>
+</view>
+
+<scroll-view style="height: 75vh;width: 100%; background-color: rgba(255, 255, 255, 0.91); " scroll-y bounces enhanced>
+  <button style="width: 70%;" type="primary" bindtap="wxLogin">微信登录</button>
+  <button style="width: 70%;" type="primary" open-type="contact">在线客服</button>
+<button style="width: 70%;" type="primary" open-type="openSetting">授权设置</button>
+<button style="width: 70%;" type="primary" open-type="feedback">投诉建议</button>
+</scroll-view>
+</view>
+
+<!-- <button open-type="share">分享转发</button> -->
