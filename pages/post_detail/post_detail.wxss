@@ -9,4 +9,16 @@
     justify-content:flex-start;/*设置主轴分布为平均分布*/
     align-items: center;/*设置侧轴分布为中心分布*/
   }
+
+  .content2{
+    width: 90%;
+    /* height: 360rpx; */
+    height: max-content;
+    /* background-color:#07c160; */
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;/*设置主轴为纵*/
+    justify-content:flex-start;/*设置主轴分布为平均分布*/
+    align-items: center;/*设置侧轴分布为中心分布*/
+  }
   

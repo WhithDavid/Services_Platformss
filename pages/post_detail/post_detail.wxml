@@ -41,7 +41,7 @@
   <image style="width: 30%;height: 50%;" src="/pages/images/watch.png"></image>
   <text style="width: 40%;height: 50%;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);">999+</text>
   </view>
-  <view style="width: 50%;height: 100%;background-color:blue;display: flex; flex-direction:row;justify-content:flex-start;align-items: center;">
+  <view style="width: 50%;height: 100%;display: flex; flex-direction:row;justify-content:flex-start;align-items: center;">
    <!--置顶 -->
     <view style="width:25%;height:100%;">
       
@@ -82,7 +82,7 @@
 
 <!-- 评论内容 -->
 <view class="content">
-<view style="width: 710rpx;height:100rpx;display: flex; flex-direction:row;justify-content:flex-start;align-items: center;">
+<view style=" width: 710rpx;height:100rpx;display: flex; flex-direction:row;justify-content:flex-start;align-items: center;">
 <!--头像-->
   <view style="width: 70rpx;height: 70%;border-radius: 50%;">
   <image src="https://img2.woyaogexing.com/2018/03/05/0979ae91fadb63e5!400x400_big.jpg" style="width: 100%; height: 100%;border-radius: 50%;" ></image>
@@ -90,7 +90,7 @@
   <view style="width: 50%;height: 100%;">
     <view style="width: max-content;height:20rpx;font-weight: bold;font-size: 24rpx;color: rgb(160, 160, 156);"></view>
    <!--名字 -->
-    <view style="width: max-content;height: max-content;font-weight: bold;font-size: 24rpx;color: rgb(160, 160, 156);text-align: ;">昵称啊啊啊</view>
+    <view style="width: max-content;height: max-content;font-weight: bold;font-size: 24rpx;color: rgb(160, 160, 156);text-align: center;">昵称啊啊啊</view>
     <!--时间 -->
     <view style="width: max-content;height: max-content;">
     <text style="font-size: 20rpx; color: rgb(160, 160, 156);">2026-06-25</text>
@@ -98,8 +98,108 @@
   </view>
   <view style="width: 36%;height: 100%;background-color: rgb(0, 7, 7);"></view>
 </view>
-<view style="width: 96%;height: max-content;font-size:26rpx;color: rgb(121, 121, 120);">
+<view style="width: 90%;height: max-content;font-size:26rpx;color: rgb(121, 121, 120);margin-left: auto;">
 这里是内容阿八八八八八八八八八八八八八啊啊啊啊啊啊啊啊aaaaaaaaa我我我我我我我我我我我 
 </view>
+
+
+<view style="width: 710rpx;height:60rpx;display: flex; flex-direction:row;justify-content:space-between;align-items: center;">
+  <!--观看次数-->
+  <view style="width: 140rpx;height: 100%;display: flex; flex-direction:row;justify-content:flex-start;align-items:center;">
+  <!-- <image style="width: 30%;height: 50%;" src="/pages/images/watch.png"></image> -->
+  <!-- <text style="width: 40%;height: 50%;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);">999+</text> -->
+  </view>
+  <view style="width: 50%;height: 100%;display: flex; flex-direction:row;justify-content:flex-start;align-items: center;">
+   <!--置顶 -->
+    <view style="width:25%;height:100%;">
+      
+    </view>
+    <!--评论 点赞 -->
+    <view style="width: 45%;height: 100%; display: flex; flex-direction:row;justify-content:flex-start;align-items:center;">
+      <!-- <image style="width: 25%;height: 50%;" src="/pages/images/comment.png"></image> -->
+      
+      <text style="width: 50%;height: 50%;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);">回 复</text>
+      <text style="width: 50%;height: 50%;background-color: aqua;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);"></text>
+    </view>
+    <view style="width: 30%;height: 100%; background-color:brown;display: flex; flex-direction:row;justify-content:flex-start;align-items:center;">
+      <image style="width: 35%;height: 55%;" src="/pages/images/like.png"></image>
+      <text style="width: 50%;height: 50%;background-color: aqua;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);">999+</text>
+    </view>
+  </view>
+
+</view>
+
+
 </view>
 <!-- 评论内容 end-->
+
+
+
+
+<!-- 评论回复内容 -->
+<view class="content2">
+<view style=" width: 710rpx;height:100rpx;display: flex; flex-direction:row;justify-content:flex-start;align-items: center;">
+<!--头像-->
+  <view style="width: 50rpx;height: 50%;border-radius: 50%;margin-top: -30rpx;">
+  <image src="https://img2.woyaogexing.com/2018/03/05/0979ae91fadb63e5!400x400_big.jpg" style="width: 100%; height: 100%;border-radius: 50%;" ></image>
+  </view>
+  <view style="width: 50%;height: 100%;">
+    <view style="width: max-content;height:20rpx;font-weight: bold;font-size: 24rpx;color: rgb(160, 160, 156);"></view>
+   <!--名字 -->
+    <view style="width: max-content;height: max-content;font-weight: bold;font-size: 24rpx;color: rgb(160, 160, 156);text-align: center;">昵称啊啊啊</view>
+    <!--时间 -->
+    <!-- <view style="width: max-content;height: max-content;">
+    <text style="font-size: 20rpx; color: rgb(160, 160, 156);">2026-06-25</text>
+    </view> -->
+  </view>
+  <view style="width: 36%;height: 100%;background-color: rgb(0, 7, 7);"></view>
+</view>
+<view style="width: 90%;height: max-content;font-size:26rpx;color: rgb(121, 121, 120);margin-left: auto;margin-top: -40rpx;">
+  <text style="font-size: 28rpx; color: rgb(160, 160, 156);">回复：</text>
+这里是内容阿八八八八八八八八八八八八八啊啊啊啊啊啊啊啊aaaaaaaaa我我我我我我我我我我我 
+</view>
+
+
+<view style="width: 710rpx;height:60rpx;display: flex; flex-direction:row;justify-content:space-between;align-items: center;">
+  <!--观看次数-->
+  <view style="width: 1rpx;height: 100%;display: flex; flex-direction:row;justify-content:flex-start;align-items:center;background-color:aqua;">
+  <!-- <image style="width: 30%;height: 50%;" src="/pages/images/watch.png"></image> -->
+  <!-- <text style="width: 40%;height: 50%;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);">999+</text> -->
+  <!-- <view style="width: max-content;height: max-content;">
+    <text style="font-size: 20rpx; color: rgb(160, 160, 156);">2026-06-25 13:14</text>
+    </view> -->
+  </view>
+
+
+
+
+  <view style="width: 180rpx;height: 100%;display: flex; flex-direction:row;justify-content:flex-start;align-items:center;">
+  <!-- <image style="width: 30%;height: 50%;" src="/pages/images/watch.png"></image> -->
+  <!-- <text style="width: 40%;height: 50%;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);">999+</text> -->
+  <view style="width: max-content;height: max-content;">
+    <text style="font-size: 20rpx; color: rgb(160, 160, 156);">2026-06-25 13:14</text>
+    </view>
+  </view>
+  <view style="width: 50%;height: 100%;display: flex; flex-direction:row;justify-content:flex-start;align-items: center;background-color: blue;">
+   <!--置顶 -->
+    <view style="width:25%;height:100%;">
+      
+    </view>
+    <!--评论 点赞 -->
+    <view style="width: 45%;height: 100%; display: flex; flex-direction:row;justify-content:flex-start;align-items:center;">
+      <!-- <image style="width: 25%;height: 50%;" src="/pages/images/comment.png"></image> -->
+      
+      <text style="width: 50%;height: 50%;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);">回 复</text>
+      <text style="width: 50%;height: 50%;background-color: aqua;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);"></text>
+    </view>
+    <view style="width: 30%;height: 100%; background-color:brown;display: flex; flex-direction:row;justify-content:flex-start;align-items:center;">
+      <image style="width: 35%;height: 55%;" src="/pages/images/like.png"></image>
+      <text style="width: 50%;height: 50%;background-color: aqua;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);">999+</text>
+    </view>
+  </view>
+
+</view>
+
+
+</view>
+<!-- 评论回复内容 end-->
