@@ -1,111 +1,108 @@
-
-<!-- <view class="custom-header"  style="padding-top: {{statusBarHeight}}px;">
-
-  <view class="search-bar" style="height: 80%;width: 40%;">
-    <icon type="search" size="18" class="search-icon"></icon>
-    <input class="search-input" placeholder="搜索内容" bindinput="onSearchInput"/>
-    <button class="search-btn" bindtap="onSearch" size="mini">搜索</button>
-  </view>
-</view> -->
-<view class="top_navigation" >
-<view style="width: 30%;height: 90%;background-color: black;"></view>
-<view style="width: 50%;height: 30%;background-color: black;"></view>
-</view>
-
-<!-- <image mode="center" style="opacity: 0.5;width: 100%;height: 400rpx; background-color: aqua;z-index: 0;" src="{{photo_burr.photo_cir_handle}}"></image> -->
-<!-- <view class="user">
-<view style="width: 160rpx;height: 160rpx;background-color: blue;border-radius: 50%;"></view>
-<view style="width: 160rpx;height: 160rpx;background-color:beige;"></view>
-</view> -->
-
-<!-- 头部分类部分 -->
-<view class="main"> 
-  <scroll-view class="main_1" scroll-x="true" show-scrollbar="false" >
-    <view class="scroll-content">
-    <view class="{{index==handle_navigation_index?'main_1_select':'main_1_unselect'}}" bindtap="clic" data-nid="{{index}}" wx:for="{{handle_navigation}}" wx:key="index"><!--头部导航-->
-    <view style="height: 90%; width: 100%; text-align: center;">{{item}}</view>
-    <view wx:if="{{index==handle_navigation_index}}" style="height: 10%; width: 30%;background-color:darkturquoise; margin: 0 auto; border-radius: 30rpx;"></view>
+<view class="page">
+  <view class="header" style="padding-top: {{statusBarHeight}}px;">
+    <view class="brand-row">
+      <view>
+        <view class="eyebrow">CAMPUS COMMUNITY</view>
+        <view class="brand">校园生活圈</view>
+        <view class="brand-subtitle">发现身边的新鲜事</view>
+      </view>
+      <view class="brand-mark">
+        <view class="brand-mark-dot"></view>
+      </view>
+    </view>
+    <view class="search-bar">
+      <view class="search-icon"></view>
+      <input class="search-input" placeholder="搜索帖子、二手、失物、评分" bindinput="onSearchInput" confirm-type="search" bindconfirm="onSearch" />
+      <button class="search-btn" size="mini" bindtap="onSearch">搜索</button>
     </view>
   </view>
+
+  <scroll-view class="category-scroll" scroll-x show-scrollbar="{{false}}">
+    <view class="category-list">
+      <view class="{{index === handle_navigation_index ? 'category-item active' : 'category-item'}}" wx:for="{{handle_navigation}}" wx:key="index" data-nid="{{index}}" bindtap="clic">
+        {{item}}
+      </view>
+    </view>
   </scroll-view>
-  <!-- <swiper class="main_2" circular="true" interval="2000" autoplay="true" >
-  <swiper-item wx:for="{{swiperImgurl}}" wx:key="index">
-  <image style="width: 100%;height: 100%;border-radius: 30rpx;" mode="center" src="{{item}}"></image>
-  </swiper-item>
-  </swiper> -->
-  <view class="main_3">
-  <view style="width: 100%;height: 82%; display: flex;
-  flex-direction:row;justify-content:space-between;align-items:flex-end;">
-    <scroll-view scroll-x show-scrollbar="false" style="width: 90%;height: 80%; background-color:aqua;display: inline-block;white-space: nowrap;">
-    <view style="width: 110rpx;height:75%;background-color: rgba(222, 220, 220, 0.9);display: inline-block; border-radius:20rpx;font-size: 24rpx;" wx:for="{{notice_text}}">
-    <text>{{item}}</text>
+
+  <view class="notice-bar">
+    <view class="notice-label"><view class="notice-dot"></view>校园公告</view>
+    <swiper circular autoplay interval="3500" class="notice-swiper">
+      <swiper-item wx:for="{{notice_text}}" wx:key="index">
+        <text>{{item}}</text>
+      </swiper-item>
+    </swiper>
+    <view class="notice-arrow">›</view>
+  </view>
+
+  <view class="task-section">
+    <view class="section-head task-section-head">
+      <view>
+        <view class="section-title">悬赏任务</view>
+        <view class="section-subtitle">代拿、代取任务在这里接单</view>
+      </view>
+      <view class="task-more">全部任务 <text>›</text></view>
     </view>
+    <scroll-view class="task-scroll" scroll-x show-scrollbar="{{false}}">
+      <view class="task-list">
+        <view class="task-card" wx:for="{{tasks}}" wx:key="id" data-id="{{item.id}}" bindtap="toTaskDetail">
+          <view class="task-top">
+            <view class="task-type"><view class="task-type-dot"></view>{{item.category}}</view>
+            <view class="task-status"><view></view>{{item.status}}</view>
+          </view>
+          <view class="task-title">{{item.title}}</view>
+          <view class="task-route">{{item.location}}</view>
+          <view class="task-bottom">
+            <view><text class="task-price">￥{{item.reward}}</text><text class="task-reward-label">悬赏</text></view>
+            <view class="task-deadline">{{item.deadline}}</view>
+          </view>
+        </view>
+      </view>
     </scroll-view>
-    <view style="width: 10%;height: 70%;background-color: rgb(222, 220, 220);border-radius:20rpx;box-shadow: 1 -4rpx 12rpx rgba(0, 0, 0, 0.4);font-size: 24rpx;text-align: center;">筛选</view>  
   </view>
 
-  <view style="width: 3%;height: 18%;background-color: brown;"></view>
+  <view class="section-head">
+    <view>
+      <view class="section-title">校园新鲜事</view>
+      <view class="section-subtitle">{{handle_navigation[handle_navigation_index]}} · 看看同学们都在分享什么</view>
+    </view>
+    <view class="post-count">{{posts.length}} 条</view>
   </view>
-</view>
-<!-- 头部分类部分 end -->
 
-<view class="content">
-<view style="width: 710rpx;height:100rpx;background-color: aquamarine;display: flex; flex-direction:row;justify-content:flex-start;align-items: center;">
-<!--头像-->
-  <view style="width: 100rpx;height: 100%;background-color: antiquewhite;border-radius: 50%;">
-  <image src="https://img2.woyaogexing.com/2018/03/05/0979ae91fadb63e5!400x400_big.jpg" style="width: 100%; height: 100%;border-radius: 50%;" ></image>
-  </view>
-  <view style="width: 50%;height: 100%;">
-   <!--名字 -->
-    <view style="width: max-content;height: max-content;font-weight: bold;font-size: 28rpx;">昵称啊啊啊</view>
-    <!--时间 -->
-    <view style="width: max-content;height: max-content;">
-    <text style="font-size: 24rpx; color: rgb(160, 160, 156);">2026-06-25</text>
+  <view class="post-list">
+    <view wx:if="{{posts.length === 0}}" class="empty">
+      <view class="empty-icon"><view></view></view>
+      <view class="empty-title">暂时没有相关内容</view>
+      <view class="empty-subtitle">换个关键词或分类试试看</view>
+    </view>
+    <view class="post-card type-{{item.type}}" wx:for="{{posts}}" wx:key="id" data-id="{{item.id}}" bindtap="toPostDetail">
+      <view class="post-head">
+        <view class="avatar-wrap">
+          <image class="avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+          <view class="online-dot"></view>
+        </view>
+        <view class="author-box">
+          <view class="author">{{item.author}}</view>
+          <view class="time">{{item.createdAt}} · 来自校园</view>
+        </view>
+        <view class="tag">{{item.category}}</view>
+      </view>
+
+      <view class="title">{{item.title}}</view>
+      <view class="content-text">{{item.content}}</view>
+
+      <view class="meta-row">
+        <text class="highlight" wx:if="{{item.price}}">￥{{item.price}}</text>
+        <text class="highlight" wx:if="{{item.score}}">评分 {{item.score}}</text>
+        <text class="status"><text class="status-dot"></text>{{item.status}}</text>
+      </view>
+
+      <view class="actions">
+        <view class="action-view"><image src="/pages/images/watch.png"></image>{{item.views}}</view>
+        <view><image src="/pages/images/comment.png"></image>{{item.comments}}</view>
+        <view><image src="/pages/images/like.png"></image>{{item.likes}}</view>
+        <view class="detail-link">查看详情 <text>›</text></view>
+      </view>
     </view>
   </view>
-  <view style="width: 36%;height: 100%;background-color: antiquewhite;"></view>
 </view>
-<view style="width: 96%;height: max-content;background-color: rgb(4, 156, 106);font-size: 30rpx; color: rgb(41, 41, 41);">
-这里是内容阿八八八八八八八八八八八八八啊啊啊啊啊啊啊啊
-
-</view>
-<view style="width: 710rpx;height:60rpx;background-color: aquamarine;display: flex; flex-direction:row;justify-content:space-between;align-items: center;">
-  <!--观看次数-->
-  <view style="width: 140rpx;height: 100%;background-color: antiquewhite;display: flex; flex-direction:row;justify-content:flex-start;align-items:center;">
-  <image style="width: 30%;height: 50%;" src="/pages/images/watch.png"></image>
-  <text style="width: 40%;height: 50%;background-color: aqua;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);">999+</text>
-  </view>
-  <view style="width: 50%;height: 100%;background-color:blue;display: flex; flex-direction:row;justify-content:flex-start;align-items: center;">
-   <!--置顶 -->
-    <view style="width:25%;height:100%;">
-      
-    </view>
-    <!--评论 点赞 -->
-    <view style="width: 45%;height: 100%; background-color:black;display: flex; flex-direction:row;justify-content:flex-start;align-items:center;">
-      <image style="width: 25%;height: 50%;" src="/pages/images/comment.png"></image>
-      <text style="width: 50%;height: 50%;background-color: aqua;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);">999+</text>
-    </view>
-    <view style="width: 30%;height: 100%; background-color:brown;display: flex; flex-direction:row;justify-content:flex-start;align-items:center;">
-      <image style="width: 35%;height: 55%;" src="/pages/images/like.png"></image>
-      <text style="width: 50%;height: 50%;background-color: aqua;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);">999+</text>
-    </view>
-  </view>
-
-</view>
-</view>
-
-<!-- 底部通知部分 -->
-<view class="bottom-bar">
-  <view style="width: 7%;height: 100%;background-color: blue;"></view>
-  <view style="width: 80%;height: 100%;background-color: burlywood;">
-  <swiper circular autoplay interval="4000" style="width: 100%;height: 100%;background-color: aqua;" >
-  <swiper-item wx:for="{{notice_text}}" style="display:flex;align-items: center;">
-   <text>{{item}}</text>
-  </swiper-item>
-  </swiper>
-  </view>
-  <view style="width: 3%;height: 50%;background-color: blue;margin-top: -45rpx;margin-left: -15rpx;">
-    <icon type="clear" size="16" color="#969799"/>
-  </view>
-</view>
-<!-- 底部通知部分 end-->

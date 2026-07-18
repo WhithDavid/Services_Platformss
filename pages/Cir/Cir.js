@@ -1,37 +1,85 @@
-// pages/cir/cir.js
+const mock = require('../../utils/mock.js');
+
 Page({
   data: {
-    statusBarHeight: 20 , // 默认状态栏高度
-    handle_navigation_index:0,
-    handle_navigation:["校园动态","闲置出售","人才市场","校园评分","物品代拿","失物招领","外卖"],
-    notice_text:['通知1','通知2','通知3','通知3','通知4','通知5','通知6','通知7'],
-    photo_burr:{
-      photo_cir_handle:"https://zsb.gxvnu.edu.cn/img/bannerny.jpg"
-    },
-    swiperImgurl:["https://c-ssl.duitang.com/uploads/blog/202207/09/20220709132233_b473e.jpg","https://c-ssl.duitang.com/uploads/item/202003/03/20200303214302_QCjGt.jpeg","https://tse2.mm.bing.net/th/id/OIP.CtAIEgmO8rhLhP7hoCX7wgHaO0?w=1024&h=2048&rs=1&pid=ImgDetMain&o=7&rm=3"]
-
+    statusBarHeight: 20,
+    handle_navigation_index: 0,
+    handle_navigation: mock.categories,
+    notice_text: mock.notices,
+    searchKeyword: '',
+    tasks: mock.tasks,
+    allPosts: mock.posts,
+    posts: mock.posts
   },
-  clic: function(e){
-    console.log(e.currentTarget.dataset.nid)
-    this.setData({
-      handle_navigation_index:e.currentTarget.dataset.nid
 
-    })
-  },
   onLoad() {
-    // 获取系统信息，适配状态栏高度
-    const systemInfo = wx.getSystemInfoSync()
+    const systemInfo = wx.getSystemInfoSync();
     this.setData({
-      statusBarHeight: systemInfo.statusBarHeight
-    })
+      statusBarHeight: systemInfo.statusBarHeight || 20
+    });
+  },
+
+  onShow() {
+    this.loadPublishedContent();
+  },
+
+  loadPublishedContent() {
+    const localPosts = wx.getStorageSync('campusPublishedPosts') || [];
+    const localTasks = wx.getStorageSync('campusPublishedTasks') || [];
+    const allPosts = localPosts.concat(mock.posts);
+
+    this.setData({
+      allPosts,
+      tasks: localTasks.concat(mock.tasks)
+    }, () => this.applyFilters());
+  },
+
+  clic(e) {
+    const index = Number(e.currentTarget.dataset.nid);
+    this.setData({
+      handle_navigation_index: index
+    }, () => this.applyFilters());
   },
 
   onSearchInput(e) {
-    console.log('输入内容：', e.detail.value)
+    this.setData({
+      searchKeyword: e.detail.value.trim()
+    });
   },
 
   onSearch() {
-    console.log('执行搜索')
-    // 跳转搜索页或其他逻辑
+    this.applyFilters();
+  },
+
+  applyFilters() {
+    const keyword = this.data.searchKeyword;
+    const category = this.data.handle_navigation[this.data.handle_navigation_index];
+    let posts = category === '推荐'
+      ? this.data.allPosts
+      : this.data.allPosts.filter(item => item.category === category);
+
+    if (keyword) {
+      posts = posts.filter(item => {
+        return item.title.indexOf(keyword) !== -1 ||
+          item.content.indexOf(keyword) !== -1 ||
+          item.category.indexOf(keyword) !== -1;
+      });
+    }
+
+    this.setData({ posts });
+  },
+
+  toPostDetail(e) {
+    const id = e.currentTarget.dataset.id;
+    wx.navigateTo({
+      url: `/pages/post_detail/post_detail?id=${id}`
+    });
+  },
+
+  toTaskDetail(e) {
+    const id = e.currentTarget.dataset.id;
+    wx.navigateTo({
+      url: `/pages/post_detail/post_detail?id=${id}`
+    });
   }
-})
+});
