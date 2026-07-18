@@ -1,105 +1,44 @@
-<!-- 顶部自动识别高度防止手机遮挡 -->
-<view style="height: {{statusBarHeight}}px;width: 100%;"></view>
-<!-- 顶部详细标题 -->
-<view style="height: 50rpx; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative;">
-  <!-- 返回按钮（靠左） -->
-  <view style="height: 80%; width: 40rpx; position: absolute; left: 20rpx; display: flex; align-items: center; justify-content: center;">
-    <image style="height: 90%; width: 90%;" src="/pages/images/return.png"></image>
+<view class="page" wx:if="{{post}}">
+  <view class="nav" style="padding-top: {{statusBarHeight}}px;">
+    <view class="back" bindtap="goBack">
+      <image src="/pages/images/return.png"></image>
+    </view>
+    <view class="nav-title">详情</view>
   </view>
-  <!-- 标题（完全居中） -->
-  <view style="width: 100%; height: 50rpx; text-align: center; line-height: 50rpx; color: rgb(70, 70, 70); font-size: 29rpx; ">
-    详情
-  </view>
-</view>
-<view style="width: 100rpx;height: 50rpx;"></view>
-<!-- 顶部详细标题 end -->
 
-<!-- 帖子详细内容 -->
-<view class="content">
-<view style="width: 710rpx;height:100rpx;display: flex; flex-direction:row;justify-content:flex-start;align-items: center;">
-<!--头像-->
-  <view style="width: 100rpx;height: 100%;border-radius: 50%;">
-  <image src="https://img2.woyaogexing.com/2018/03/05/0979ae91fadb63e5!400x400_big.jpg" style="width: 100%; height: 100%;border-radius: 50%;" ></image>
-  </view>
-  <view style="width: 50%;height: 100%;">
-   <!--名字 -->
-    <view style="width: max-content;height: max-content;font-weight: bold;font-size: 28rpx;">昵称啊啊啊</view>
-    <!--时间 -->
-    <view style="width: max-content;height: max-content;">
-    <text style="font-size: 24rpx; color: rgb(160, 160, 156);">2026-06-25</text>
+  <view class="card">
+    <view class="post-head">
+      <image class="avatar" src="{{post.avatar}}" mode="aspectFill"></image>
+      <view class="author-box">
+        <view class="author">{{post.author}}</view>
+        <view class="time">{{post.createdAt}}</view>
+      </view>
+      <view class="tag">{{post.category}}</view>
     </view>
-  </view>
-  <view style="width: 36%;height: 100%;"></view>
-</view>
-<view style="width: 96%;height: max-content;font-size: 30rpx; color: rgb(41, 41, 41);">
-这里是内容阿八八八八八八八八八八八八八啊啊啊啊啊啊啊啊
 
-</view>
-<view style="width: 710rpx;height:60rpx;display: flex; flex-direction:row;justify-content:space-between;align-items: center;">
-  <!--观看次数-->
-  <view style="width: 140rpx;height: 100%;display: flex; flex-direction:row;justify-content:flex-start;align-items:center;">
-  <image style="width: 30%;height: 50%;" src="/pages/images/watch.png"></image>
-  <text style="width: 40%;height: 50%;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);">999+</text>
-  </view>
-  <view style="width: 50%;height: 100%;background-color:blue;display: flex; flex-direction:row;justify-content:flex-start;align-items: center;">
-   <!--置顶 -->
-    <view style="width:25%;height:100%;">
-      
+    <view class="title">{{post.title}}</view>
+    <view class="content-text">{{post.content}}</view>
+
+    <view class="meta-row">
+      <text wx:if="{{post.price}}">价格 ￥{{post.price}}</text>
+      <text wx:if="{{post.reward}}">悬赏 ￥{{post.reward}}</text>
+      <text wx:if="{{post.score}}">评分 {{post.score}}</text>
+      <text>{{post.status}}</text>
     </view>
-    <!--评论 点赞 -->
-    <view style="width: 45%;height: 100%; background-color:black;display: flex; flex-direction:row;justify-content:flex-start;align-items:center;">
-      <image style="width: 25%;height: 50%;" src="/pages/images/comment.png"></image>
-      <text style="width: 50%;height: 50%;background-color: aqua;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);">999+</text>
-    </view>
-    <view style="width: 30%;height: 100%; background-color:brown;display: flex; flex-direction:row;justify-content:flex-start;align-items:center;">
-      <image style="width: 35%;height: 55%;" src="/pages/images/like.png"></image>
-      <text style="width: 50%;height: 50%;background-color: aqua;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);">999+</text>
+
+    <view class="actions">
+      <button size="mini" bindtap="favoritePost">收藏</button>
+      <button size="mini" bindtap="likePost">点赞</button>
     </view>
   </view>
 
-</view>
-</view>
-<!-- 帖子详细内容 end-->
-<!-- 评论头 -->
-<view style="height: 30rpx;width: 100%;"></view>
-<view style="height: 50rpx;width: 120rpx;">
-<view style="height: 45rpx;width:max-content;text-align: center;">
-<text style="font-size: 28rpx;color: rgb(160, 160, 156);">评论 </text>
-<text style="color: rgb(160, 160, 156);font-size: 24rpx;">34333</text>
-</view>
-<view style="height: 5rpx;width: 56rpx;background-color: rgb(118, 121, 168);text-align: center;margin: 0 auto"></view>
-</view>
-<view style="height: 30rpx;width: 100%;"></view>
-<!-- 评论头 end -->
+  <view class="section-title">评论 {{comments.length}}</view>
 
-
-
-
-
-
-
-
-
-<!-- 评论内容 -->
-<view class="content">
-<view style="width: 710rpx;height:100rpx;display: flex; flex-direction:row;justify-content:flex-start;align-items: center;">
-<!--头像-->
-  <view style="width: 70rpx;height: 70%;border-radius: 50%;">
-  <image src="https://img2.woyaogexing.com/2018/03/05/0979ae91fadb63e5!400x400_big.jpg" style="width: 100%; height: 100%;border-radius: 50%;" ></image>
-  </view>
-  <view style="width: 50%;height: 100%;">
-    <view style="width: max-content;height:20rpx;font-weight: bold;font-size: 24rpx;color: rgb(160, 160, 156);"></view>
-   <!--名字 -->
-    <view style="width: max-content;height: max-content;font-weight: bold;font-size: 24rpx;color: rgb(160, 160, 156);text-align: ;">昵称啊啊啊</view>
-    <!--时间 -->
-    <view style="width: max-content;height: max-content;">
-    <text style="font-size: 20rpx; color: rgb(160, 160, 156);">2026-06-25</text>
+  <view class="comment-card" wx:for="{{comments}}" wx:key="id">
+    <view class="comment-head">
+      <text class="comment-author">{{item.author}}</text>
+      <text class="comment-time">{{item.createdAt}}</text>
     </view>
+    <view class="comment-content">{{item.content}}</view>
   </view>
-  <view style="width: 36%;height: 100%;background-color: rgb(0, 7, 7);"></view>
 </view>
-<view style="width: 96%;height: max-content;font-size:26rpx;color: rgb(121, 121, 120);">
-这里是内容阿八八八八八八八八八八八八八啊啊啊啊啊啊啊啊aaaaaaaaa我我我我我我我我我我我 
-</view>
-</view>
-<!-- 评论内容 end-->

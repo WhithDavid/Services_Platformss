@@ -1,78 +1,106 @@
-<view wx:if="{{userInfo}}" class="back_img">
-  <image src="{{userInfo.bgUrl}}" mode="aspectFill"></image>
-</view>
-<view wx:else class="back_img">
-  <image src="{{unLoginUrl_bg}}" mode="aspectFill"></image>
-</view>
-<view style="height: 650rpx;width: 100%;"></view>
-<view wx:if="{{userInfo}}">
-<view class="hand_img">
-  <view  style="width: 100%; height: 50rpx;"></view>
-  <view class="hand" plain >
-    <image bind:tap="toDetail" src="{{userInfo.imgHand}}" style="width: 200rpx;height: 200rpx;border-radius: 50%; border:none; margin-bottom:150rpx ;" mode="aspectFill"></image>
-  </view>
-</view>
-<view class="hand_name">{{userInfo.Name}}</view>
-<scroll-view style="height: 75vh;width: 100%; background-color: rgba(255, 255, 255, 0.91); " scroll-y bounces enhanced>
-  
-  <view style="width: 100%;height: 50rpx;"></view>
-  <view class="list">
-    <view class="list_1">
-      <view bind:tap="To_Love" class="list_content" plain>
-      <view style="height: 70%;width: 100%;">
-        <image style="height: 90%; width: 90%; padding-left: 8%;" src="/image/love1.png" mode="aspectFill"></image>
+<view class="page">
+  <view class="hero" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-title">我的</view>
+
+    <view class="profile" bindtap="onProfileTap">
+      <view class="avatar-wrap">
+        <image class="avatar" src="{{userInfo ? userInfo.imgHand : unLoginUrl}}" mode="aspectFill"></image>
+        <view class="{{userInfo ? 'avatar-status online' : 'avatar-status'}}"></view>
       </view>
-      <view style="height: 30%;width: 100%;">
-        <view style="height: 30%;width: 100%;display: flex;align-items: center;justify-content: center;">收 藏</view>
+
+      <view class="profile-main">
+        <view class="name-row">
+          <view class="name">{{userInfo ? userInfo.Name : '登录校园账号'}}</view>
+          <view wx:if="{{userInfo}}" class="identity">{{userInfo.studentTag}}</view>
+        </view>
+        <view class="desc">
+          {{userInfo ? '欢迎回来，今天也去看看校园新鲜事吧' : '登录后管理帖子、收藏和悬赏任务'}}
+        </view>
       </view>
-      </view>
-      <!--  -->
-      <view class="list_content" plain bind:tap="To_LiShi">
-      <view style="height: 70%;width: 100%;">
-        <image style="height: 90%; width: 90%; padding-left: 8%;" src="/image/LiShi.png" mode="aspectFit"></image>
-      </view>
-      <view style="height: 30%;width: 100%;">
-        <view style="height: 30%;width: 100%;display: flex;align-items: center;justify-content: center;">历 史</view>
-      </view>
-      </view>
-      <!--  -->
-      <view class="list_content" plain bind:tap="toDetail">
-      <view style="height: 70%;width: 100%;">
-        <image style="height: 60%; width: 85%; padding-left: 8%;" src="/image/My.png" mode="aspectFit"></image>
-      </view>
-      <view style="height: 30%;width: 100%;">
-        <view style="height: 30%;width: 100%;display: flex;align-items: center;justify-content: center;">我 的</view>
-      </view>
-      </view>
-      <!-- end -->
+
+      <view class="profile-arrow">›</view>
     </view>
-    
-    
+
+    <view class="hero-decoration decoration-one"></view>
+    <view class="hero-decoration decoration-two"></view>
   </view>
-  <view style="width: 100%;height: 300rpx;"></view>
-  
-  <button style="width: 70%;" type="primary" open-type="contact">在线客服</button>
-<button style="width: 70%;" type="primary" open-type="openSetting">授权设置</button>
-<button style="width: 70%;" type="primary" open-type="feedback">投诉建议</button>
-<button style="width: 70%;" wx:if="{{userInfo}}" type="primary" bindtap="outLogin">退出登录</button>
-</scroll-view>
 
-
-</view>
-<view wx:else>
-  <view class="hand_img">
-  <view style="width: 100%; height: 50rpx;"></view>
-  <view class="hand" plain>
-    <image bind:tap="toDetail" src="{{unLoginUrl}}" style="width: 200rpx;height: 200rpx;border-radius: 50%; border:none; margin-bottom:150rpx ;"></image>
+  <view class="content-card overview-card">
+    <view
+      class="overview-item"
+      wx:for="{{contentEntries}}"
+      wx:key="key"
+      data-key="{{item.key}}"
+      bindtap="onEntryTap"
+    >
+      <view class="overview-count">{{userInfo ? item.count : '--'}}</view>
+      <view class="overview-label">{{item.label}}</view>
+    </view>
   </view>
-</view>
 
-<scroll-view style="height: 75vh;width: 100%; background-color: rgba(255, 255, 255, 0.91); " scroll-y bounces enhanced>
-  <button style="width: 70%;" type="primary" bindtap="wxLogin">微信登录</button>
-  <button style="width: 70%;" type="primary" open-type="contact">在线客服</button>
-<button style="width: 70%;" type="primary" open-type="openSetting">授权设置</button>
-<button style="width: 70%;" type="primary" open-type="feedback">投诉建议</button>
-</scroll-view>
-</view>
+  <view class="section">
+    <view class="section-head">
+      <view>
+        <view class="section-title">悬赏任务</view>
+        <view class="section-subtitle">发布与接取的任务分开管理</view>
+      </view>
+      <view class="section-more" data-key="published" bindtap="onEntryTap">全部 <text>›</text></view>
+    </view>
 
-<!-- <button open-type="share">分享转发</button> -->
+    <view class="content-card task-grid">
+      <view
+        class="task-item"
+        wx:for="{{taskEntries}}"
+        wx:key="key"
+        data-key="{{item.key}}"
+        bindtap="onEntryTap"
+      >
+        <view class="task-icon">{{item.icon}}</view>
+        <view class="task-count">{{userInfo ? item.count : '--'}}</view>
+        <view class="task-label">{{item.label}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-head">
+      <view>
+        <view class="section-title">常用功能</view>
+        <view class="section-subtitle">账号与服务设置</view>
+      </view>
+    </view>
+
+    <view class="content-card service-card">
+      <view class="service-row" bindtap="toDetail">
+        <view class="service-icon orange">资</view>
+        <view class="service-name">个人资料</view>
+        <view class="service-desc">{{userInfo ? '编辑' : '登录后设置'}}</view>
+        <view class="service-arrow">›</view>
+      </view>
+
+      <button class="service-row service-button" open-type="contact">
+        <view class="service-icon green">客</view>
+        <view class="service-name">在线客服</view>
+        <view class="service-desc">问题咨询</view>
+        <view class="service-arrow">›</view>
+      </button>
+
+      <button class="service-row service-button" open-type="openSetting">
+        <view class="service-icon blue">权</view>
+        <view class="service-name">授权设置</view>
+        <view class="service-desc">隐私与权限</view>
+        <view class="service-arrow">›</view>
+      </button>
+
+      <button class="service-row service-button last" open-type="feedback">
+        <view class="service-icon pink">议</view>
+        <view class="service-name">投诉建议</view>
+        <view class="service-desc">帮助我们改进</view>
+        <view class="service-arrow">›</view>
+      </button>
+    </view>
+  </view>
+
+  <button wx:if="{{userInfo}}" class="logout-btn" bindtap="outLogin">退出登录</button>
+  <view class="version">校园生活圈 · 让校园生活更简单</view>
+</view>

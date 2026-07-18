@@ -1,2 +1,213 @@
-<!--pages/create/create.wxml-->
-<text>pages/create/create.wxml</text>
+<view class="page">
+  <view class="header" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-title">发布</view>
+    <view class="header-copy">
+      <view class="header-title">分享校园生活</view>
+      <view class="header-subtitle">发布帖子，或者发起一个悬赏任务</view>
+    </view>
+    <view class="header-decoration"></view>
+  </view>
+
+  <view class="mode-switch">
+    <view
+      class="{{publishMode === 'post' ? 'mode-item active' : 'mode-item'}}"
+      data-mode="post"
+      bindtap="selectMode"
+    >
+      <view class="mode-icon">帖</view>
+      <view>
+        <view class="mode-name">发帖子</view>
+        <view class="mode-desc">动态、二手、失物与评分</view>
+      </view>
+    </view>
+    <view
+      class="{{publishMode === 'task' ? 'mode-item active task-active' : 'mode-item'}}"
+      data-mode="task"
+      bindtap="selectMode"
+    >
+      <view class="mode-icon">赏</view>
+      <view>
+        <view class="mode-name">发悬赏</view>
+        <view class="mode-desc">代拿、代取与其他跑腿</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="form-section">
+    <view class="section-head">
+      <view class="section-title">{{publishMode === 'post' ? '选择帖子分类' : '选择任务类型'}}</view>
+      <view class="required-tip">请选择一项</view>
+    </view>
+
+    <view wx:if="{{publishMode === 'post'}}" class="category-grid">
+      <view
+        class="{{selectedPostCategory === item.key ? 'category-item selected' : 'category-item'}}"
+        wx:for="{{postCategories}}"
+        wx:key="key"
+        data-category="{{item.key}}"
+        bindtap="selectPostCategory"
+      >
+        <view class="category-icon">{{item.icon}}</view>
+        <view>{{item.key}}</view>
+      </view>
+    </view>
+
+    <view wx:else class="category-grid task-category-grid">
+      <view
+        class="{{selectedTaskType === item.key ? 'category-item selected task-selected' : 'category-item'}}"
+        wx:for="{{taskTypes}}"
+        wx:key="key"
+        data-type="{{item.key}}"
+        bindtap="selectTaskType"
+      >
+        <view class="category-icon">{{item.icon}}</view>
+        <view>{{item.key}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="form-section">
+    <view class="section-head">
+      <view class="section-title">填写内容</view>
+      <view class="required-tip">* 为必填项</view>
+    </view>
+
+    <view class="form-card">
+      <view class="field-group">
+        <view class="field-label">标题 <text>*</text></view>
+        <input
+          class="field-input"
+          maxlength="40"
+          placeholder="{{publishMode === 'post' ? '用一句话概括你想分享的内容' : '用一句话说明需要完成的任务'}}"
+          value="{{form.title}}"
+          data-field="title"
+          bindinput="onInput"
+        />
+        <view class="field-count">{{form.title.length}}/40</view>
+      </view>
+
+      <view class="field-group content-group">
+        <view class="field-label">详细说明 <text>*</text></view>
+        <textarea
+          class="content-input"
+          maxlength="500"
+          auto-height
+          placeholder="{{publishMode === 'post' ? '补充具体情况、时间、地点或注意事项' : '说明物品信息、联系方式和任务要求'}}"
+          value="{{form.content}}"
+          data-field="content"
+          bindinput="onInput"
+        ></textarea>
+        <view class="field-count">{{form.content.length}}/500</view>
+      </view>
+
+      <block wx:if="{{publishMode === 'post'}}">
+        <view wx:if="{{selectedPostCategory === '二手市场'}}" class="conditional-fields">
+          <view class="field-row">
+            <view class="field-half">
+              <view class="field-label">出售价格 <text>*</text></view>
+              <view class="input-with-unit">
+                <text>￥</text>
+                <input type="digit" placeholder="0.00" value="{{form.price}}" data-field="price" bindinput="onInput" />
+              </view>
+            </view>
+            <view class="field-half">
+              <view class="field-label">商品成色 <text>*</text></view>
+              <input class="simple-input" placeholder="例如：九成新" value="{{form.condition}}" data-field="condition" bindinput="onInput" />
+            </view>
+          </view>
+          <view class="field-group compact">
+            <view class="field-label">交易地点 <text>*</text></view>
+            <input class="field-input" placeholder="例如：一食堂门口" value="{{form.tradeLocation}}" data-field="tradeLocation" bindinput="onInput" />
+          </view>
+        </view>
+
+        <view wx:if="{{selectedPostCategory === '校园评分'}}" class="conditional-fields">
+          <view class="field-group compact">
+            <view class="field-label">评分对象 <text>*</text></view>
+            <input class="field-input" placeholder="例如：一食堂麻辣香锅" value="{{form.ratingTarget}}" data-field="ratingTarget" bindinput="onInput" />
+          </view>
+          <view class="score-row">
+            <view>
+              <view class="field-label">综合评分 <text>*</text></view>
+              <view class="score-tip">0～10 分，可保留一位小数</view>
+            </view>
+            <view class="score-input">
+              <input type="digit" maxlength="4" placeholder="8.5" value="{{form.score}}" data-field="score" bindinput="onInput" />
+              <text>分</text>
+            </view>
+          </view>
+        </view>
+      </block>
+
+      <block wx:else>
+        <view class="conditional-fields task-fields">
+          <view class="field-group compact">
+            <view class="field-label">取件地点 <text>*</text></view>
+            <input class="field-input" placeholder="从哪里取" value="{{form.pickupLocation}}" data-field="pickupLocation" bindinput="onInput" />
+          </view>
+          <view class="route-line"><view></view></view>
+          <view class="field-group compact">
+            <view class="field-label">送达地点 <text>*</text></view>
+            <input class="field-input" placeholder="送到哪里" value="{{form.deliveryLocation}}" data-field="deliveryLocation" bindinput="onInput" />
+          </view>
+
+          <view class="field-row task-detail-row">
+            <view class="field-half">
+              <view class="field-label">悬赏金额 <text>*</text></view>
+              <view class="input-with-unit">
+                <text>￥</text>
+                <input type="digit" placeholder="5.00" value="{{form.reward}}" data-field="reward" bindinput="onInput" />
+              </view>
+            </view>
+            <view class="field-half">
+              <view class="field-label">截止日期 <text>*</text></view>
+              <picker mode="date" value="{{form.deadlineDate}}" bindchange="onDateChange">
+                <view class="picker-value">{{form.deadlineDate}}</view>
+              </picker>
+            </view>
+          </view>
+
+          <view class="field-group compact deadline-time">
+            <view class="field-label">截止时间 <text>*</text></view>
+            <picker mode="time" value="{{form.deadlineTime}}" bindchange="onTimeChange">
+              <view class="picker-value">{{form.deadlineTime}} 前完成</view>
+            </picker>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <view class="form-section">
+    <view class="section-head">
+      <view class="section-title">添加图片</view>
+      <view class="required-tip">选填，最多 9 张</view>
+    </view>
+
+    <view class="image-card">
+      <view class="image-grid">
+        <view class="image-item" wx:for="{{images}}" wx:key="*this">
+          <image src="{{item}}" mode="aspectFill" data-src="{{item}}" bindtap="previewImage"></image>
+          <view class="remove-image" data-index="{{index}}" catchtap="removeImage">×</view>
+        </view>
+        <view wx:if="{{images.length < 9}}" class="image-uploader" bindtap="chooseImage">
+          <view class="plus">+</view>
+          <view>添加图片</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="publish-tip">
+    {{publishMode === 'post' ? '帖子发布后将展示在对应的校园分类中' : '悬赏发布后将进入独立的任务区域'}}
+  </view>
+
+  <button
+    class="{{publishMode === 'post' ? 'submit-btn' : 'submit-btn task-submit'}}"
+    loading="{{submitting}}"
+    disabled="{{submitting}}"
+    bindtap="submitPost"
+  >
+    {{submitting ? '正在发布…' : (publishMode === 'post' ? '发布帖子' : '发布悬赏')}}
+  </button>
+</view>
