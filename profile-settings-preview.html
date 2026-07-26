@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>个人资料设置预览</title>
+  <style>
+    :root {
+      --bg: #f7f7f8;
+      --card: #ffffff;
+      --text: #2e2828;
+      --subtext: #8f888c;
+      --line: #ece7e9;
+      --primary: #f2a978;
+      --primary-deep: #e58a53;
+      --shadow: 0 18px 40px rgba(67, 48, 39, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: linear-gradient(180deg, #fbf2ea 0%, var(--bg) 34%);
+      color: var(--text);
+    }
+
+    .layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      justify-content: center;
+      padding: 28px 18px 40px;
+    }
+
+    .phone {
+      width: 320px;
+      overflow: hidden;
+      border: 1px solid #ebe4e6;
+      border-radius: 34px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 18px 18px 22px;
+      background: linear-gradient(145deg, #f8c79f 0%, var(--primary) 100%);
+    }
+
+    .status-bar {
+      height: 18px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .nav-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      color: #4c382f;
+      background: rgba(255, 255, 255, 0.26);
+    }
+
+    .nav-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .profile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .avatar {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      border: 4px solid rgba(255, 255, 255, 0.75);
+      object-fit: cover;
+      background: #fff;
+    }
+
+    .name {
+      margin-top: 12px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .tip {
+      margin-top: 6px;
+      font-size: 12px;
+      color: rgba(60, 44, 35, 0.76);
+    }
+
+    .edit-avatar {
+      margin-top: 10px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: #6a4935;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .content {
+      padding: 16px;
+      background: var(--bg);
+    }
+
+    .card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--card);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      min-height: 56px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .row:last-child {
+      border-bottom: 0;
+    }
+
+    .label {
+      width: 76px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .value {
+      flex: 1;
+      font-size: 14px;
+      color: #433c40;
+      text-align: right;
+    }
+
+    .placeholder {
+      color: #b3abb0;
+    }
+
+    .arrow {
+      margin-left: 10px;
+      color: #beb7bc;
+      font-size: 18px;
+    }
+
+    .footer {
+      padding-top: 18px;
+    }
+
+    .save-btn {
+      width: 100%;
+      height: 46px;
+      border: 0;
+      border-radius: 16px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      background: linear-gradient(145deg, #f0a36e, var(--primary-deep));
+      box-shadow: 0 10px 20px rgba(226, 137, 86, 0.22);
+    }
+
+    .subtip {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--subtext);
+      text-align: center;
+    }
+
+    .notes {
+      width: 340px;
+      padding: 20px;
+      border: 1px solid #ebe4e6;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow);
+    }
+
+    .notes h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+    }
+
+    .notes p {
+      margin: 0 0 12px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #5f585c;
+    }
+
+    .notes ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #4d4649;
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <div class="phone">
+      <div class="hero">
+        <div class="status-bar"></div>
+        <div class="nav">
+          <div class="nav-btn">‹</div>
+          <div class="nav-title">个人资料</div>
+          <div class="nav-btn">⋯</div>
+        </div>
+
+        <div class="profile">
+          <img
+            class="avatar"
+            src="https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0"
+            alt="头像"
+          />
+          <div class="name">微信用户</div>
+          <div class="tip">完善基本信息，让别人更容易认识你</div>
+          <div class="edit-avatar">更换头像</div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="card">
+          <div class="row">
+            <div class="label">昵称</div>
+            <div class="value">微信用户</div>
+            <div class="arrow">›</div>
+          </div>
+          <div class="row">
+            <div class="label">性别</div>
+            <div class="value">保密</div>
+            <div class="arrow">›</div>
+          </div>
+          <div class="row">
+            <div class="label">简介</div>
+            <div class="value placeholder">介绍一下自己</div>
+            <div class="arrow">›</div>
+          </div>
+          <div class="row">
+            <div class="label">院系专业</div>
+            <div class="value placeholder">请选择</div>
+            <div class="arrow">›</div>
+          </div>
+          <div class="row">
+            <div class="label">校区</div>
+            <div class="value">育才校区</div>
+            <div class="arrow">›</div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <button class="save-btn">保存</button>
+          <div class="subtip">这版重点是简洁，后面可以再补充字段</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notes">
+      <h2>简化后的方向</h2>
+      <p>我把页面收成了一个头部加一张表单卡片，去掉了多余分组、标签块和隐私开关，整体更接近常见的小程序资料设置页。</p>
+      <ul>
+        <li>只保留最核心的 5 项资料</li>
+        <li>每项都用一行展示，视觉更干净</li>
+        <li>仍然保留你现在“我的”页的暖色风格</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

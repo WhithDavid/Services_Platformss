@@ -1,9 +1,10 @@
 {
   "pages": [
-    "pages/post_detail/post_detail",
-    "pages/User/User",
     "pages/create/create",
-    "pages/Cir/Cir"
+    "pages/Cir/Cir",
+    "pages/User/User",
+    "pages/post_detail/post_detail",
+    "pages/user_detail/user_detail"
   ],
   "window": {
     "navigationStyle": "default",
@@ -28,7 +29,7 @@
       },
       {
         "iconPath": "pages/images/create.png",
-        "selectedIconPath": "pages/images/User_select.png",
+        "selectedIconPath": "pages/images/create.png",
         "text": "发布",
         "pagePath": "pages/create/create"
       },

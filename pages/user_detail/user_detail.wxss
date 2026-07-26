@@ -1,0 +1,163 @@
+page {
+  background: #f7f7f8;
+  color: #2e2828;
+}
+
+.page {
+  min-height: 100vh;
+}
+
+.hero {
+  padding-left: 24rpx;
+  padding-right: 24rpx;
+  padding-bottom: 30rpx;
+  background: linear-gradient(145deg, #f8c79f 0%, #f2a978 100%);
+  border-radius: 0 0 32rpx 32rpx;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88rpx;
+}
+
+.nav-btn {
+  width: 56rpx;
+  height: 56rpx;
+  line-height: 56rpx;
+  color: #4c382f;
+  font-size: 34rpx;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.28);
+  border-radius: 50%;
+}
+
+.nav-placeholder {
+  background: transparent;
+}
+
+.nav-title {
+  color: #2d241f;
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10rpx 0 6rpx;
+  text-align: center;
+}
+
+.avatar {
+  width: 156rpx;
+  height: 156rpx;
+  border: 6rpx solid rgba(255, 255, 255, 0.76);
+  border-radius: 50%;
+  background: #fff;
+}
+
+.name {
+  margin-top: 20rpx;
+  color: #2f2521;
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.tip {
+  margin-top: 10rpx;
+  color: rgba(61, 46, 37, 0.72);
+  font-size: 22rpx;
+}
+
+.edit-avatar {
+  margin-top: 18rpx;
+  padding: 0 24rpx;
+  height: 54rpx;
+  line-height: 54rpx;
+  color: #6a4935;
+  font-size: 22rpx;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 999rpx;
+}
+
+.content {
+  padding: 24rpx;
+}
+
+.card {
+  overflow: hidden;
+  background: #fff;
+  border: 1rpx solid #ece7e9;
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 24rpx rgba(56, 46, 51, 0.04);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  min-height: 110rpx;
+  padding: 0 24rpx;
+  border-bottom: 1rpx solid #ece7e9;
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.row-textarea {
+  align-items: flex-start;
+  padding-top: 24rpx;
+  padding-bottom: 24rpx;
+}
+
+.label {
+  width: 140rpx;
+  color: #30292c;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.input,
+.picker,
+.picker-value {
+  flex: 1;
+  width: 100%;
+  min-height: 44rpx;
+  color: #423b3f;
+  font-size: 27rpx;
+  text-align: right;
+}
+
+.textarea {
+  flex: 1;
+  height: 132rpx;
+  color: #423b3f;
+  font-size: 27rpx;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.save-btn {
+  margin-top: 28rpx;
+  height: 84rpx;
+  color: #fff;
+  font-size: 30rpx;
+  line-height: 84rpx;
+  background: linear-gradient(145deg, #f0a36e, #e58a53);
+  border-radius: 18rpx;
+  box-shadow: 0 12rpx 24rpx rgba(226, 137, 86, 0.2);
+}
+
+.save-btn::after {
+  border: 0;
+}
+
+.subtip {
+  margin-top: 18rpx;
+  color: #918a8e;
+  font-size: 22rpx;
+  text-align: center;
+}

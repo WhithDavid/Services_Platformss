@@ -1,105 +1,216 @@
-<!-- 顶部自动识别高度防止手机遮挡 -->
-<view style="height: {{statusBarHeight}}px;width: 100%;"></view>
-<!-- 顶部详细标题 -->
-<view style="height: 50rpx; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative;">
-  <!-- 返回按钮（靠左） -->
-  <view style="height: 80%; width: 40rpx; position: absolute; left: 20rpx; display: flex; align-items: center; justify-content: center;">
-    <image style="height: 90%; width: 90%;" src="/pages/images/return.png"></image>
-  </view>
-  <!-- 标题（完全居中） -->
-  <view style="width: 100%; height: 50rpx; text-align: center; line-height: 50rpx; color: rgb(70, 70, 70); font-size: 29rpx; ">
-    详情
-  </view>
-</view>
-<view style="width: 100rpx;height: 50rpx;"></view>
-<!-- 顶部详细标题 end -->
+<view class="page">
+  <view class="hero" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav">
+      <view class="nav-btn" bindtap="onBack">‹</view>
+      <view class="nav-title">帖子详情</view>
+      <view class="nav-placeholder"></view>
+    </view>
 
-<!-- 帖子详细内容 -->
-<view class="content">
-<view style="width: 710rpx;height:100rpx;display: flex; flex-direction:row;justify-content:flex-start;align-items: center;">
-<!--头像-->
-  <view style="width: 100rpx;height: 100%;border-radius: 50%;">
-  <image src="https://img2.woyaogexing.com/2018/03/05/0979ae91fadb63e5!400x400_big.jpg" style="width: 100%; height: 100%;border-radius: 50%;" ></image>
-  </view>
-  <view style="width: 50%;height: 100%;">
-   <!--名字 -->
-    <view style="width: max-content;height: max-content;font-weight: bold;font-size: 28rpx;">昵称啊啊啊</view>
-    <!--时间 -->
-    <view style="width: max-content;height: max-content;">
-    <text style="font-size: 24rpx; color: rgb(160, 160, 156);">2026-06-25</text>
+    <view wx:if="{{post}}" class="summary-card type-{{post.type}}">
+      <view class="author-row">
+        <image class="avatar" src="{{post.avatar}}" mode="aspectFill"></image>
+        <view class="author-meta">
+          <view class="author-name">{{post.author}}</view>
+          <view class="author-sub">{{post.createdAt}} · 来自校园生活圈</view>
+        </view>
+        <view class="tag">{{post.category}}</view>
+      </view>
+
+      <view class="title">{{post.title}}</view>
+      <view class="desc">{{post.content}}</view>
+
+      <view wx:if="{{post.mediaFiles && post.mediaFiles.length}}" class="media-grid {{post.mediaLayoutClass}}">
+        <view wx:for="{{post.mediaFiles}}" wx:for-item="media" wx:key="index" class="media-item">
+          <image
+            wx:if="{{media.type === 'image'}}"
+            class="media-image"
+            src="{{media.url}}"
+            mode="aspectFill"
+            data-src="{{media.url}}"
+            data-images="{{post.images}}"
+            bindtap="previewImage"
+          ></image>
+          <view wx:else class="media-video-wrap">
+            <video
+              class="media-video"
+              src="{{media.url}}"
+              poster="{{media.poster}}"
+              object-fit="cover"
+              controls="{{true}}"
+              show-center-play-btn="{{true}}"
+              enable-progress-gesture="{{true}}"
+            ></video>
+            <view class="video-badge">视频</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="meta-row">
+        <view class="meta-pill">浏览 {{post.views}}</view>
+        <view class="meta-pill">评论 {{commentTotal}}</view>
+        <view class="meta-pill">点赞 {{post.likes}}</view>
+        <view class="meta-pill">状态 {{post.status}}</view>
+        <view wx:if="{{post.price}}" class="meta-pill">￥{{post.price}}</view>
+        <view wx:if="{{post.score}}" class="meta-pill">评分 {{post.score}}</view>
+        <view wx:if="{{post.reward}}" class="meta-pill">悬赏 ￥{{post.reward}}</view>
+      </view>
+
+      <view wx:if="{{post.parentType === '悬赏'}}" class="task-extra">
+        <view wx:if="{{post.pickupLocation}}" class="task-line">取件地点：{{post.pickupLocation}}</view>
+        <view wx:if="{{post.deliveryLocation}}" class="task-line">送达地点：{{post.deliveryLocation}}</view>
+        <view wx:if="{{post.deadline}}" class="task-line">截止时间：{{post.deadline}}</view>
+      </view>
+    </view>
+
+    <view wx:elif="{{!loading}}" class="summary-card empty-card">
+      <view class="empty-title">帖子不存在或已被删除</view>
+      <view class="empty-sub">返回圈子页再看看其他内容吧</view>
     </view>
   </view>
-  <view style="width: 36%;height: 100%;"></view>
-</view>
-<view style="width: 96%;height: max-content;font-size: 30rpx; color: rgb(41, 41, 41);">
-这里是内容阿八八八八八八八八八八八八八啊啊啊啊啊啊啊啊
 
-</view>
-<view style="width: 710rpx;height:60rpx;display: flex; flex-direction:row;justify-content:space-between;align-items: center;">
-  <!--观看次数-->
-  <view style="width: 140rpx;height: 100%;display: flex; flex-direction:row;justify-content:flex-start;align-items:center;">
-  <image style="width: 30%;height: 50%;" src="/pages/images/watch.png"></image>
-  <text style="width: 40%;height: 50%;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);">999+</text>
-  </view>
-  <view style="width: 50%;height: 100%;background-color:blue;display: flex; flex-direction:row;justify-content:flex-start;align-items: center;">
-   <!--置顶 -->
-    <view style="width:25%;height:100%;">
-      
+  <view class="section">
+    <view class="comment-head">
+      <view class="section-title">评论 {{commentTotal}}</view>
+      <view class="section-sub">按时间排序</view>
     </view>
-    <!--评论 点赞 -->
-    <view style="width: 45%;height: 100%; background-color:black;display: flex; flex-direction:row;justify-content:flex-start;align-items:center;">
-      <image style="width: 25%;height: 50%;" src="/pages/images/comment.png"></image>
-      <text style="width: 50%;height: 50%;background-color: aqua;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);">999+</text>
+
+    <view wx:if="{{loading}}" class="loading-text">正在加载详情...</view>
+
+    <view wx:elif="{{comments.length}}" class="comment-wrap">
+      <view wx:for="{{comments}}" wx:for-item="comment" wx:key="id" class="comment-card">
+        <view class="comment-main">
+          <image class="mini-avatar" src="{{comment.userIcon}}" mode="aspectFill"></image>
+          <view class="comment-body">
+            <view class="comment-user">{{comment.userName}}</view>
+            <view class="comment-time">{{comment.time}}</view>
+            <view class="comment-text">{{comment.content}}</view>
+
+            <view wx:if="{{comment.images.length}}" class="comment-image-list">
+              <image
+                wx:for="{{comment.images}}"
+                wx:for-item="img"
+                wx:key="*this"
+                class="comment-image"
+                src="{{img}}"
+                mode="aspectFill"
+                data-src="{{img}}"
+                data-images="{{comment.images}}"
+                bindtap="previewImage"
+              ></image>
+            </view>
+
+            <view class="comment-actions">
+              <text
+                class="comment-action"
+                data-id="{{comment.id}}"
+                data-name="{{comment.userName}}"
+                data-openid="{{comment.userOpenid}}"
+                bindtap="startReply"
+              >回复</text>
+              <text
+                class="comment-action like-action {{comment.isLiked ? 'liked' : ''}}"
+                data-id="{{comment.id}}"
+                bindtap="toggleCommentLike"
+              >{{comment.isLiked ? '已赞' : '点赞'}} {{comment.likeCount}}</text>
+            </view>
+
+            <view wx:if="{{comment.visibleReplies.length}}" class="reply-list">
+              <view wx:for="{{comment.visibleReplies}}" wx:for-item="reply" wx:key="id" class="reply-card">
+                <view class="comment-main reply-main">
+                  <image class="mini-avatar reply-avatar" src="{{reply.userIcon}}" mode="aspectFill"></image>
+                  <view class="comment-body">
+                    <view class="comment-user reply-user">{{reply.userName}}</view>
+                    <view class="comment-time">{{reply.time}}</view>
+                    <view class="comment-text">
+                      <text wx:if="{{reply.replyName}}" class="reply-prefix">回复 {{reply.replyName}}：</text>{{reply.content}}
+                    </view>
+
+                    <view wx:if="{{reply.images.length}}" class="comment-image-list reply-image-list">
+                      <image
+                        wx:for="{{reply.images}}"
+                        wx:for-item="img"
+                        wx:key="*this"
+                        class="comment-image reply-image"
+                        src="{{img}}"
+                        mode="aspectFill"
+                        data-src="{{img}}"
+                        data-images="{{reply.images}}"
+                        bindtap="previewImage"
+                      ></image>
+                    </view>
+
+                    <view class="comment-actions reply-actions">
+                      <text
+                        class="comment-action"
+                        data-id="{{reply.id}}"
+                        data-name="{{reply.userName}}"
+                        data-openid="{{reply.userOpenid}}"
+                        bindtap="startReply"
+                      >回复</text>
+                      <text
+                        class="comment-action like-action {{reply.isLiked ? 'liked' : ''}}"
+                        data-id="{{reply.id}}"
+                        bindtap="toggleCommentLike"
+                      >{{reply.isLiked ? '已赞' : '点赞'}} {{reply.likeCount}}</text>
+                    </view>
+                  </view>
+                </view>
+              </view>
+
+              <view
+                wx:if="{{comment.replies.length > 3}}"
+                class="reply-toggle"
+                data-id="{{comment.id}}"
+                bindtap="toggleReplies"
+              >
+                {{comment.expanded ? '收起回复' : ('展开其余 ' + comment.hiddenReplyCount + ' 条回复')}}
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
     </view>
-    <view style="width: 30%;height: 100%; background-color:brown;display: flex; flex-direction:row;justify-content:flex-start;align-items:center;">
-      <image style="width: 35%;height: 55%;" src="/pages/images/like.png"></image>
-      <text style="width: 50%;height: 50%;background-color: aqua;font-size: 24rpx;display: flex; align-items:center;color: rgb(160, 160, 156);">999+</text>
+
+    <view wx:else class="empty-comment">
+      <view class="empty-comment-title">还没有评论</view>
+      <view class="empty-comment-sub">来当第一个留言的人吧</view>
     </view>
   </view>
 
-</view>
-</view>
-<!-- 帖子详细内容 end-->
-<!-- 评论头 -->
-<view style="height: 30rpx;width: 100%;"></view>
-<view style="height: 50rpx;width: 120rpx;">
-<view style="height: 45rpx;width:max-content;text-align: center;">
-<text style="font-size: 28rpx;color: rgb(160, 160, 156);">评论 </text>
-<text style="color: rgb(160, 160, 156);font-size: 24rpx;">34333</text>
-</view>
-<view style="height: 5rpx;width: 56rpx;background-color: rgb(118, 121, 168);text-align: center;margin: 0 auto"></view>
-</view>
-<view style="height: 30rpx;width: 100%;"></view>
-<!-- 评论头 end -->
+  <view class="composer">
+    <view wx:if="{{replyTarget}}" class="reply-banner">
+      <text class="reply-banner-text">正在回复 {{replyTarget.targetName}}</text>
+      <text class="reply-banner-action" bindtap="clearReplyTarget">取消</text>
+    </view>
 
+    <view wx:if="{{commentImages.length}}" class="composer-image-list">
+      <view wx:for="{{commentImages}}" wx:key="*this" class="composer-image-item">
+        <image
+          class="composer-image"
+          src="{{item}}"
+          mode="aspectFill"
+          data-src="{{item}}"
+          bindtap="previewComposerImage"
+        ></image>
+        <view class="composer-remove" data-index="{{index}}" catchtap="removeCommentImage">×</view>
+      </view>
+    </view>
 
-
-
-
-
-
-
-
-<!-- 评论内容 -->
-<view class="content">
-<view style="width: 710rpx;height:100rpx;display: flex; flex-direction:row;justify-content:flex-start;align-items: center;">
-<!--头像-->
-  <view style="width: 70rpx;height: 70%;border-radius: 50%;">
-  <image src="https://img2.woyaogexing.com/2018/03/05/0979ae91fadb63e5!400x400_big.jpg" style="width: 100%; height: 100%;border-radius: 50%;" ></image>
-  </view>
-  <view style="width: 50%;height: 100%;">
-    <view style="width: max-content;height:20rpx;font-weight: bold;font-size: 24rpx;color: rgb(160, 160, 156);"></view>
-   <!--名字 -->
-    <view style="width: max-content;height: max-content;font-weight: bold;font-size: 24rpx;color: rgb(160, 160, 156);text-align: ;">昵称啊啊啊</view>
-    <!--时间 -->
-    <view style="width: max-content;height: max-content;">
-    <text style="font-size: 20rpx; color: rgb(160, 160, 156);">2026-06-25</text>
+    <view class="composer-row">
+      <view class="composer-tool" bindtap="chooseCommentImage">图片</view>
+      <textarea
+        class="composer-input"
+        placeholder="{{commentPlaceholder}}"
+        value="{{commentInput}}"
+        auto-height
+        maxlength="500"
+        focus="{{inputFocus}}"
+        bindinput="onCommentInput"
+        bindblur="onInputBlur"
+      ></textarea>
+      <view class="composer-btn {{submittingComment ? 'disabled' : ''}}" bindtap="submitComment">
+        {{submittingComment ? '发送中' : '发送'}}
+      </view>
     </view>
   </view>
-  <view style="width: 36%;height: 100%;background-color: rgb(0, 7, 7);"></view>
 </view>
-<view style="width: 96%;height: max-content;font-size:26rpx;color: rgb(121, 121, 120);">
-这里是内容阿八八八八八八八八八八八八八啊啊啊啊啊啊啊啊aaaaaaaaa我我我我我我我我我我我 
-</view>
-</view>
-<!-- 评论内容 end-->

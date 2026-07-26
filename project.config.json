@@ -1,5 +1,6 @@
 {
   "compileType": "miniprogram",
+  "cloudfunctionRoot": "cloud",
   "libVersion": "trial",
   "cloudbaseRoot": "cloud",
   "packOptions": {
@@ -25,5 +26,6 @@
     "tabIndent": "auto",
     "tabSize": 2
   },
-  "appid": "wx560baf63ef4d3524"
+  "appid": "wx560baf63ef4d3524",
+  "simulatorPluginLibVersion": {}
 }

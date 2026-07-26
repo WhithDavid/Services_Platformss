@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>帖子详情预览</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #f7f7f8;
+      color: #272427;
+    }
+    .phone {
+      width: 390px;
+      min-height: 100vh;
+      margin: 0 auto;
+      background: #f7f7f8;
+    }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 18px 18px 26px;
+      background: linear-gradient(145deg, #f8c79f 0%, #f2a978 100%);
+      border-radius: 0 0 24px 24px;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -80px;
+      right: -60px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .nav {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .back,
+    .share {
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.28);
+      color: #2f2a26;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .nav-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #26211f;
+    }
+    .summary-card {
+      position: relative;
+      z-index: 1;
+      padding: 16px;
+      border: 1px solid rgba(110, 81, 60, 0.08);
+      border-radius: 22px;
+      background: rgba(255, 248, 241, 0.72);
+      backdrop-filter: blur(10px);
+    }
+    .author-row {
+      display: flex;
+      align-items: center;
+    }
+    .avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #ead7c8;
+    }
+    .author-meta {
+      flex: 1;
+      min-width: 0;
+      margin-left: 12px;
+    }
+    .author-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #2d2826;
+    }
+    .author-sub {
+      margin-top: 4px;
+      font-size: 12px;
+      color: rgba(58, 47, 41, 0.7);
+    }
+    .tag {
+      flex-shrink: 0;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: #5d483a;
+      background: rgba(255, 255, 255, 0.8);
+    }
+    .title {
+      margin-top: 16px;
+      font-size: 21px;
+      line-height: 1.45;
+      font-weight: 700;
+      color: #241f1e;
+    }
+    .desc {
+      margin-top: 10px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #5c5658;
+    }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .meta-pill {
+      padding: 7px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      color: #645d60;
+      background: rgba(255, 255, 255, 0.76);
+    }
+    .section {
+      padding: 18px;
+    }
+    .comment-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #2a2729;
+    }
+    .section-sub {
+      font-size: 12px;
+      color: #9a9598;
+    }
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .media-image,
+    .media-video {
+      width: 100%;
+      height: 148px;
+      border-radius: 18px;
+      object-fit: cover;
+      background: #ebe7ea;
+    }
+    .media-video {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #3a3739 0%, #676165 100%);
+    }
+    .media-video::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, rgba(0, 0, 0, 0.38), rgba(0, 0, 0, 0)),
+        url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80") center/cover;
+      opacity: 0.92;
+    }
+    .play {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 32px;
+      z-index: 1;
+    }
+    .video-badge {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      z-index: 1;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: #fff;
+      background: rgba(18, 18, 18, 0.6);
+    }
+    .comment-wrap {
+      margin-top: 14px;
+    }
+    .comment-card,
+    .reply-card {
+      padding: 16px 0;
+      border-bottom: 1px solid #e5e1e3;
+    }
+    .comment-main {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .mini-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #e8e0da;
+    }
+    .reply-card .mini-avatar {
+      width: 32px;
+      height: 32px;
+    }
+    .comment-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .comment-user {
+      font-size: 14px;
+      font-weight: 700;
+      color: #323032;
+    }
+    .comment-time {
+      margin-top: 3px;
+      font-size: 12px;
+      color: #a29ca0;
+    }
+    .comment-text {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #615b5e;
+    }
+    .comment-actions {
+      display: flex;
+      gap: 18px;
+      margin-top: 12px;
+      font-size: 12px;
+      color: #8d888b;
+    }
+    .reply-list {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-left: 12px;
+      border-left: 2px solid #f0ebee;
+    }
+    .reply-card {
+      padding: 0 0 0 2px;
+      border-bottom: 0;
+    }
+    .composer {
+      position: sticky;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 18px 18px;
+      padding: 12px;
+      border-top: 1px solid #e5e1e3;
+      background: rgba(247, 247, 248, 0.96);
+      backdrop-filter: blur(10px);
+    }
+    .input {
+      flex: 1;
+      padding: 11px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      color: #9a9598;
+      background: #f5f4f5;
+    }
+    .action-btn {
+      padding: 9px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: #fff;
+      background: #202020;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="hero">
+      <div class="nav">
+        <div class="back">‹</div>
+        <div class="nav-title">帖子详情</div>
+        <div class="share">···</div>
+      </div>
+
+      <div class="summary-card">
+        <div class="author-row">
+          <img class="avatar" src="https://img2.woyaogexing.com/2018/03/05/0979ae91fadb63e5!400x400_big.jpg" alt="avatar">
+          <div class="author-meta">
+            <div class="author-name">小鱼饼干呀</div>
+            <div class="author-sub">2026-07-26 15:18 · 来自校园生活圈</div>
+          </div>
+          <div class="tag">校园动态</div>
+        </div>
+
+        <div class="title">今天在操场边遇到一只超亲人的校园猫，还会主动蹭人</div>
+        <div class="desc">
+          下午从图书馆出来路过操场，看到它一直趴在台阶边晒太阳。靠近之后完全不怕人，还会跟着走两步。
+          如果有人认识这只猫，也欢迎在评论区补充一下它平时常出没的位置。
+        </div>
+
+        <div class="media-grid">
+          <img class="media-image" src="https://images.unsplash.com/photo-1519052537078-e6302a4968d4?auto=format&fit=crop&w=600&q=80" alt="media">
+          <div class="media-video">
+            <div class="play">▶</div>
+            <div class="video-badge">视频</div>
+          </div>
+        </div>
+
+        <div class="meta-row">
+          <div class="meta-pill">浏览 128</div>
+          <div class="meta-pill">评论 24</div>
+          <div class="meta-pill">点赞 39</div>
+          <div class="meta-pill">状态 正常</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="comment-head">
+        <div class="section-title">评论 24</div>
+        <div class="section-sub">按时间排序</div>
+      </div>
+
+      <div class="comment-wrap">
+        <div class="comment-card">
+          <div class="comment-main">
+            <img class="mini-avatar" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80" alt="commenter">
+            <div class="comment-body">
+              <div class="comment-user">奶茶少冰</div>
+              <div class="comment-time">10 分钟前</div>
+              <div class="comment-text">我知道这只猫，经常在东操场和一食堂附近活动，特别喜欢趴在人多的台阶边。</div>
+              <div class="comment-actions">
+                <span>回复</span>
+                <span>点赞 12</span>
+              </div>
+
+              <div class="reply-list">
+                <div class="reply-card">
+                  <div class="comment-main">
+                    <img class="mini-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80" alt="reply">
+                    <div class="comment-body">
+                      <div class="comment-user">阿白同学</div>
+                      <div class="comment-time">刚刚</div>
+                      <div class="comment-text">回复 奶茶少冰：难怪我昨天也在那边看到它，真的特别亲人。</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="comment-card">
+          <div class="comment-main">
+            <img class="mini-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80" alt="commenter">
+            <div class="comment-body">
+              <div class="comment-user">晚风自习室</div>
+              <div class="comment-time">26 分钟前</div>
+              <div class="comment-text">这个详情页结构我感觉挺合适的，上面突出帖子主体，下面评论层级也比较清楚。</div>
+              <div class="comment-actions">
+                <span>回复</span>
+                <span>点赞 8</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="composer">
+      <div class="input">说点什么，友善交流...</div>
+      <div class="action-btn">发送</div>
+    </div>
+  </div>
+</body>
+</html>
