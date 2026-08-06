@@ -215,6 +215,10 @@ page {
   border-radius: 14rpx;
 }
 
+.like-pill.active {
+  color: #e57a57;
+}
+
 .task-extra {
   margin-top: 20rpx;
   padding-top: 18rpx;

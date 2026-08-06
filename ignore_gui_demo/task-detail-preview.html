@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>悬赏任务详情预览</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", sans-serif;
+      background: #f7f7f8;
+      color: #272427;
+    }
+
+    .phone {
+      width: 390px;
+      min-height: 100vh;
+      margin: 0 auto;
+      background: #f7f7f8;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 44px 18px 24px;
+      background: linear-gradient(145deg, #f8c79f 0%, #f2a978 100%);
+      border-radius: 0 0 26px 26px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -56px;
+      right: -42px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .nav {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-btn,
+    .nav-placeholder {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2f2a26;
+      font-size: 28px;
+      background: rgba(255, 255, 255, 0.26);
+    }
+
+    .nav-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #26211f;
+    }
+
+    .task-card {
+      position: relative;
+      z-index: 1;
+      margin-top: 14px;
+      padding: 18px;
+      background: rgba(255, 248, 241, 0.76);
+      border: 1px solid rgba(110, 81, 60, 0.08);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .task-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .task-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.82);
+      color: #6a4f3f;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .task-badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f29b59;
+    }
+
+    .task-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.82);
+      color: #6a625b;
+      font-size: 13px;
+    }
+
+    .task-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #49c982;
+    }
+
+    .task-title {
+      margin-top: 16px;
+      font-size: 25px;
+      line-height: 1.4;
+      font-weight: 700;
+      color: #241f1e;
+    }
+
+    .task-desc {
+      margin-top: 10px;
+      font-size: 15px;
+      line-height: 1.9;
+      color: #5c5658;
+    }
+
+    .task-meta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .meta-item {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.74);
+    }
+
+    .meta-label {
+      font-size: 12px;
+      color: #a0938c;
+    }
+
+    .meta-value {
+      margin-top: 6px;
+      font-size: 15px;
+      line-height: 1.5;
+      color: #312d2b;
+      font-weight: 600;
+    }
+
+    .reward-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(107, 84, 69, 0.12);
+    }
+
+    .reward-box {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .reward-price {
+      font-size: 30px;
+      font-weight: 800;
+      color: #df653e;
+    }
+
+    .reward-label {
+      font-size: 13px;
+      color: #907666;
+    }
+
+    .deadline {
+      font-size: 13px;
+      color: #776e68;
+    }
+
+    .section {
+      padding: 22px 18px 0;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2a2729;
+    }
+
+    .section-subtitle {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #9a9598;
+    }
+
+    .publisher-card,
+    .accept-card,
+    .progress-card,
+    .tips-card {
+      margin-top: 12px;
+      padding: 18px;
+      border-radius: 20px;
+      background: #f2f2f3;
+      border: 1px solid #e5e1e3;
+    }
+
+    .publisher-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #e9ddd3;
+    }
+
+    .publisher-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #2d2826;
+    }
+
+    .publisher-desc {
+      margin-top: 5px;
+      font-size: 13px;
+      color: #8f888b;
+    }
+
+    .contact-btn {
+      margin-left: auto;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #202020;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .accept-head,
+    .progress-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .mini-link {
+      font-size: 13px;
+      color: #4b78d8;
+    }
+
+    .accept-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .accept-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      background: #ffffff;
+    }
+
+    .accept-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .accept-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #2f2a28;
+    }
+
+    .accept-text {
+      margin-top: 5px;
+      font-size: 13px;
+      color: #8e888b;
+      line-height: 1.6;
+    }
+
+    .accept-action {
+      padding: 9px 12px;
+      border-radius: 12px;
+      background: #fff3e9;
+      color: #d86a46;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .progress-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .progress-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .progress-dot-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      width: 18px;
+    }
+
+    .progress-dot {
+      width: 10px;
+      height: 10px;
+      margin-top: 4px;
+      border-radius: 50%;
+      background: #cfc9cc;
+    }
+
+    .progress-dot.active {
+      background: #49c982;
+    }
+
+    .progress-line {
+      width: 2px;
+      flex: 1;
+      min-height: 34px;
+      margin-top: 6px;
+      background: #ddd8db;
+    }
+
+    .progress-item:last-child .progress-line {
+      display: none;
+    }
+
+    .progress-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #2f2a28;
+    }
+
+    .progress-text {
+      margin-top: 5px;
+      font-size: 13px;
+      color: #8e888b;
+      line-height: 1.6;
+    }
+
+    .tips-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .tips-item {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #615b5e;
+    }
+
+    .bottom-bar {
+      position: sticky;
+      bottom: 0;
+      display: flex;
+      gap: 12px;
+      padding: 14px 18px calc(14px + env(safe-area-inset-bottom));
+      margin-top: 28px;
+      background: rgba(247, 247, 248, 0.96);
+      border-top: 1px solid #e5e1e3;
+      backdrop-filter: blur(10px);
+    }
+
+    .ghost-btn,
+    .primary-btn {
+      height: 48px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .ghost-btn {
+      flex: 0 0 104px;
+      background: #ffffff;
+      color: #4d484b;
+      border: 1px solid #e4dfe2;
+    }
+
+    .primary-btn {
+      flex: 1;
+      background: #202020;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="hero">
+      <div class="nav">
+        <div class="nav-btn">‹</div>
+        <div class="nav-title">悬赏详情</div>
+        <div class="nav-placeholder"></div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-top">
+          <div class="task-badge">
+            <span class="task-badge-dot"></span>
+            外卖代拿
+          </div>
+          <div class="task-status">
+            <span class="task-status-dot"></span>
+            正在接单
+          </div>
+        </div>
+
+        <div class="task-title">帮我去北门蜜雪拿一杯杨枝甘露，晚上七点前送到 8 栋宿舍楼下</div>
+        <div class="task-desc">
+          备注已经写在订单里了，取餐后直接送到宿舍楼下就行。如果能顺手帮我带一包纸巾，我会在到达后额外补 2 元。
+        </div>
+
+        <div class="task-meta">
+          <div class="meta-item">
+            <div class="meta-label">取件地点</div>
+            <div class="meta-value">学校北门蜜雪冰城</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">送达地点</div>
+            <div class="meta-value">桂才校区 8 栋宿舍楼下</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">发布时间</div>
+            <div class="meta-value">今天 17:42</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">任务编号</div>
+            <div class="meta-value">RW20260802017</div>
+          </div>
+        </div>
+
+        <div class="reward-row">
+          <div class="reward-box">
+            <div class="reward-price">￥12</div>
+            <div class="reward-label">任务悬赏</div>
+          </div>
+          <div class="deadline">截止今晚 19:00</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">发布者</div>
+      <div class="section-subtitle">接单前先确认发布者和联系方式</div>
+      <div class="publisher-card">
+        <div class="publisher-row">
+          <img class="avatar" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80" alt="avatar">
+          <div>
+            <div class="publisher-name">难受不点</div>
+            <div class="publisher-desc">校园用户 · 信用良好 · 已发布 13 条任务</div>
+          </div>
+          <div class="contact-btn">联系TA</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="accept-head">
+        <div>
+          <div class="section-title">接单大厅</div>
+          <div class="section-subtitle">这里展示已经申请接单的同学</div>
+        </div>
+        <div class="mini-link">查看全部</div>
+      </div>
+
+      <div class="accept-card">
+        <div class="accept-list">
+          <div class="accept-item">
+            <img class="avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80" alt="avatar">
+            <div class="accept-main">
+              <div class="accept-name">阿杰</div>
+              <div class="accept-text">我现在就在北门附近，10 分钟内可以帮你取到。</div>
+            </div>
+            <div class="accept-action">选他接单</div>
+          </div>
+
+          <div class="accept-item">
+            <img class="avatar" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80" alt="avatar">
+            <div class="accept-main">
+              <div class="accept-name">小林</div>
+              <div class="accept-text">我刚好要回宿舍，路线顺路，可以帮忙带过去。</div>
+            </div>
+            <div class="accept-action">选他接单</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="progress-head">
+        <div>
+          <div class="section-title">任务进度</div>
+          <div class="section-subtitle">接单后可以看到任务处理状态</div>
+        </div>
+      </div>
+
+      <div class="progress-card">
+        <div class="progress-list">
+          <div class="progress-item">
+            <div class="progress-dot-wrap">
+              <div class="progress-dot active"></div>
+              <div class="progress-line"></div>
+            </div>
+            <div>
+              <div class="progress-name">等待接单</div>
+              <div class="progress-text">任务刚发布，正在等待同学申请接单。</div>
+            </div>
+          </div>
+
+          <div class="progress-item">
+            <div class="progress-dot-wrap">
+              <div class="progress-dot"></div>
+              <div class="progress-line"></div>
+            </div>
+            <div>
+              <div class="progress-name">已选接单人</div>
+              <div class="progress-text">发布者确认接单人后，可进入沟通和配送阶段。</div>
+            </div>
+          </div>
+
+          <div class="progress-item">
+            <div class="progress-dot-wrap">
+              <div class="progress-dot"></div>
+              <div class="progress-line"></div>
+            </div>
+            <div>
+              <div class="progress-name">任务配送中</div>
+              <div class="progress-text">接单人取到物品后，页面会更新为配送中状态。</div>
+            </div>
+          </div>
+
+          <div class="progress-item">
+            <div class="progress-dot-wrap">
+              <div class="progress-dot"></div>
+            </div>
+            <div>
+              <div class="progress-name">任务完成</div>
+              <div class="progress-text">确认送达后，悬赏任务会自动结束。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">接单说明</div>
+      <div class="section-subtitle">避免误接，先看清任务要求</div>
+      <div class="tips-card">
+        <ul class="tips-list">
+          <li class="tips-item">1. 接单后请尽快和发布者确认是否需要补充购买内容。</li>
+          <li class="tips-item">2. 如果临时无法完成，请尽早取消，避免影响对方安排。</li>
+          <li class="tips-item">3. 任务完成后由发布者确认，页面状态会同步更新。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="ghost-btn">暂不接单</div>
+      <div class="primary-btn">立即申请接单</div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,23 +1,134 @@
+const PAGE_SIZE = 15;
+const TASK_LIMIT = 8;
+
 Page({
   data: {
     statusBarHeight: 20,
+    currentUserLikeIds: [],
     handle_navigation_index: 0,
     handle_navigation: ['推荐', '校园动态', '二手市场', '失物招领', '校园评分'],
     notice_text: ['欢迎来到校园服务平台', '二手交易请线下验货', '代拿任务请确认地点和时间'],
     searchKeyword: '',
     tasks: [],
     allPosts: [],
-    posts: []
+    posts: [],
+    postOffset: 0,
+    hasMorePosts: true,
+    hasLoadedOnce: false,
+    initialLoading: false,
+    loadingMore: false
   },
 
   onLoad() {
     this.setData({
       statusBarHeight: getApp().globalData.statusBarHeight || 20
     });
+    this.restoreCircleCache();
   },
 
   onShow() {
+    this.syncUserLikeState(() => {
+      if (this.data.hasLoadedOnce) {
+        this.refreshLikeState();
+        return;
+      }
+      this.loadPublishedContent({ reset: true });
+    });
+  },
+
+  onPullDownRefresh() {
+    this.loadPublishedContent({ reset: true }).finally(() => {
+      wx.stopPullDownRefresh();
+    });
+  },
+
+  onReachBottom() {
     this.loadPublishedContent();
+  },
+
+  getCurrentUser() {
+    return wx.getStorageSync('user') || wx.getStorageSync('campusUserInfo');
+  },
+
+  getCircleCache() {
+    const app = getApp();
+    return (app.globalData && app.globalData.circleFeedCache) || null;
+  },
+
+  saveCircleCache(extra = {}) {
+    const app = getApp();
+    if (!app.globalData) return;
+
+    app.globalData.circleFeedCache = {
+      allPosts: this.data.allPosts,
+      tasks: this.data.tasks,
+      postOffset: this.data.postOffset,
+      hasMorePosts: this.data.hasMorePosts,
+      hasLoadedOnce: this.data.hasLoadedOnce,
+      ...extra
+    };
+  },
+
+  restoreCircleCache() {
+    const cache = this.getCircleCache();
+    if (!cache || !cache.hasLoadedOnce) return;
+
+    this.setData({
+      allPosts: cache.allPosts || [],
+      tasks: cache.tasks || [],
+      postOffset: Number(cache.postOffset) || 0,
+      hasMorePosts: cache.hasMorePosts !== false,
+      hasLoadedOnce: true
+    }, () => this.applyFilters());
+  },
+
+  canShowInCircle(item) {
+    return Number(item.post_status) === 1;
+  },
+
+  normalizeArrayField(value) {
+    if (Array.isArray(value)) return value;
+    if (value === '' || value === null || value === undefined) return [];
+    return [value];
+  },
+
+  saveCurrentUserCache(nextUser) {
+    wx.setStorageSync('user', nextUser);
+    wx.setStorageSync('campusUserInfo', nextUser);
+  },
+
+  syncUserLikeState(callback) {
+    const currentUser = this.getCurrentUser();
+    const currentUserLikeIds = currentUser ? this.normalizeArrayField(currentUser.user_like) : [];
+    this.setData({ currentUserLikeIds }, callback);
+  },
+
+  refreshLikeState() {
+    const currentUserLikeIds = this.data.currentUserLikeIds || [];
+    this.setData({
+      allPosts: this.data.allPosts.map((item) => ({
+        ...item,
+        isLiked: currentUserLikeIds.includes(item.id)
+      })),
+      tasks: this.data.tasks.map((item) => ({
+        ...item,
+        isLiked: currentUserLikeIds.includes(item.id)
+      }))
+    }, () => {
+      this.applyFilters();
+      this.saveCircleCache();
+    });
+  },
+
+  mergePosts(existingList, incomingList) {
+    const postMap = new Map();
+    (existingList || []).forEach((item) => {
+      postMap.set(item.id, item);
+    });
+    (incomingList || []).forEach((item) => {
+      postMap.set(item.id, item);
+    });
+    return Array.from(postMap.values());
   },
 
   formatDateTime(value) {
@@ -85,8 +196,10 @@ Page({
 
   normalizePostItem(item) {
     const mediaList = this.normalizeMediaList(item.post_img || item.images || []);
+    const currentUserLikeIds = this.data.currentUserLikeIds || [];
     return {
       id: item._id || item.id,
+      userOpenid: item.user_openid || '',
       type: this.getPostType(item.post_sub_type || item.category),
       category: item.post_sub_type || item.category || '校园动态',
       title: item.post_title || item.title || '',
@@ -102,13 +215,16 @@ Page({
       views: item.views ?? 0,
       comments: item.post_comment_num ?? item.comments ?? 0,
       likes: item.post_like_num ?? item.likes ?? 0,
+      isLiked: currentUserLikeIds.includes(item._id || item.id),
       status: this.getPostStatus(item)
     };
   },
 
   normalizeTaskItem(item) {
+    const currentUserLikeIds = this.data.currentUserLikeIds || [];
     return {
       id: item._id || item.id,
+      userOpenid: item.user_openid || '',
       category: item.post_sub_type || item.category || '悬赏任务',
       title: item.post_title || item.title || '',
       content: item.post_content || item.content || '',
@@ -121,32 +237,74 @@ Page({
       views: item.views ?? 0,
       comments: item.post_comment_num ?? item.comments ?? 0,
       likes: item.post_like_num ?? item.likes ?? 0,
+      isLiked: currentUserLikeIds.includes(item._id || item.id),
       status: item.post_status === 1 ? '待接单' : '已结束'
     };
   },
 
-  async loadPublishedContent() {
+  async loadPublishedContent(options = {}) {
+    const { reset = false } = options;
+    if (reset) {
+      if (this.data.initialLoading) return;
+    } else {
+      if (this.data.loadingMore || !this.data.hasMorePosts) return;
+    }
+
+    const shouldLoadTasks = reset || !this.data.tasks.length;
     try {
-      const db = wx.cloud.database();
-      const res = await db.collection('post').orderBy('post_time', 'desc').limit(100).get();
-      const list = res.data || [];
-      const allPosts = list
-        .filter(item => item.post_parent_type !== '悬赏')
-        .map(item => this.normalizePostItem(item));
-      const tasks = list
-        .filter(item => item.post_parent_type === '悬赏')
-        .map(item => this.normalizeTaskItem(item));
+      this.setData({
+        initialLoading: reset,
+        loadingMore: !reset
+      });
+
+      const res = await wx.cloud.callFunction({
+        name: 'getCirclePosts',
+        data: {
+          postLimit: PAGE_SIZE,
+          postSkip: reset ? 0 : this.data.postOffset,
+          taskLimit: TASK_LIMIT,
+          includeTasks: shouldLoadTasks
+        }
+      });
+
+      if (!res.result || res.result.code !== 0) {
+        throw new Error((res.result && res.result.message) || '加载帖子失败');
+      }
+
+      const resultData = res.result.data || {};
+      const incomingPosts = ((resultData.posts || [])
+        .filter(item => this.canShowInCircle(item))
+        .map(item => this.normalizePostItem(item)));
+      const incomingTasks = ((resultData.tasks || [])
+        .filter(item => this.canShowInCircle(item))
+        .map(item => this.normalizeTaskItem(item)));
+      const allPosts = reset
+        ? incomingPosts
+        : this.mergePosts(this.data.allPosts, incomingPosts);
+      const tasks = shouldLoadTasks ? incomingTasks : this.data.tasks;
 
       this.setData({
         allPosts,
-        tasks
-      }, () => this.applyFilters());
+        tasks,
+        postOffset: Number(resultData.nextPostSkip) || allPosts.length,
+        hasMorePosts: resultData.hasMorePosts !== false,
+        hasLoadedOnce: true,
+        initialLoading: false,
+        loadingMore: false
+      }, () => {
+        this.applyFilters();
+        this.saveCircleCache();
+      });
     } catch (error) {
       console.log('loadPublishedContent error:', error);
-      this.setData({
-        allPosts: [],
-        posts: [],
-        tasks: []
+      this.setData(reset ? {
+        initialLoading: false,
+        loadingMore: false,
+        allPosts: this.data.hasLoadedOnce ? this.data.allPosts : [],
+        posts: this.data.hasLoadedOnce ? this.data.posts : [],
+        tasks: this.data.hasLoadedOnce ? this.data.tasks : []
+      } : {
+        loadingMore: false
       });
       wx.showToast({
         title: '加载帖子失败',
@@ -214,5 +372,88 @@ Page({
     wx.navigateTo({
       url: `/pages/post_detail/post_detail?id=${id}`
     });
+  },
+
+  toUserProfile(e) {
+    const openid = e.currentTarget.dataset.openid;
+    if (!openid) return;
+    const currentUser = this.getCurrentUser();
+    const currentUserOpenid = currentUser ? (currentUser.user_openid || '') : '';
+    if (openid === currentUserOpenid) return;
+
+    wx.navigateTo({
+      url: `/pages/user_profile/user_profile?openid=${openid}`
+    });
+  },
+
+  async togglePostLike(e) {
+    const postId = e.currentTarget.dataset.id;
+    const currentUser = this.getCurrentUser();
+
+    if (!currentUser) {
+      wx.showModal({
+        title: '请先登录',
+        content: '登录后才能点赞帖子。',
+        confirmText: '前往登录',
+        confirmColor: '#222222',
+        success: (res) => {
+          if (res.confirm) {
+            wx.switchTab({
+              url: '/pages/User/User'
+            });
+          }
+        }
+      });
+      return;
+    }
+
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'togglePostLike',
+        data: {
+          post_id: postId
+        }
+      });
+
+      if (!res.result || res.result.code !== 0) {
+        throw new Error((res.result && res.result.message) || '点赞失败');
+      }
+
+      const resultData = res.result.data || {};
+      const nextUser = {
+        ...currentUser,
+        user_like: this.normalizeArrayField(resultData.user_like)
+      };
+
+      this.saveCurrentUserCache(nextUser);
+      this.setData({
+        currentUserLikeIds: nextUser.user_like,
+        allPosts: this.data.allPosts.map((item) => {
+          if (item.id !== postId) return item;
+          return {
+            ...item,
+            isLiked: !!resultData.liked,
+            likes: resultData.post_like_num
+          };
+        }),
+        tasks: this.data.tasks.map((item) => {
+          if (item.id !== postId) return item;
+          return {
+            ...item,
+            isLiked: !!resultData.liked,
+            likes: resultData.post_like_num
+          };
+        })
+      }, () => {
+        this.applyFilters();
+        this.saveCircleCache();
+      });
+    } catch (error) {
+      console.log('toggle post like error:', error);
+      wx.showToast({
+        title: '点赞失败，请稍后再试',
+        icon: 'none'
+      });
+    }
   }
 });

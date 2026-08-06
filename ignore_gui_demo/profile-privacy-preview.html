@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>隐私设置预览</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px 0;
+      background: #efeff1;
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: #2e2828;
+    }
+
+    .phone {
+      width: 390px;
+      margin: 0 auto;
+      overflow: hidden;
+      background: #f7f7f8;
+      border-radius: 28px;
+      box-shadow: 0 18px 48px rgba(30, 24, 27, 0.14);
+    }
+
+    .hero {
+      padding: 18px 18px 22px;
+      background: linear-gradient(145deg, #f8c79f 0%, #f2a978 100%);
+      border-radius: 0 0 24px 24px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 46px;
+    }
+
+    .nav-btn {
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      color: #4c382f;
+      font-size: 20px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .nav-placeholder {
+      background: transparent;
+    }
+
+    .nav-title {
+      color: #2d241f;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .profile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0 4px;
+      text-align: center;
+    }
+
+    .avatar {
+      width: 78px;
+      height: 78px;
+      border: 3px solid rgba(255, 255, 255, 0.76);
+      border-radius: 50%;
+      object-fit: cover;
+      background: #fff;
+    }
+
+    .name {
+      margin-top: 10px;
+      color: #2f2521;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .tip {
+      margin-top: 6px;
+      color: rgba(61, 46, 37, 0.72);
+      font-size: 12px;
+    }
+
+    .content {
+      padding: 18px;
+    }
+
+    .card {
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #ece7e9;
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(56, 46, 51, 0.04);
+    }
+
+    .card + .card {
+      margin-top: 14px;
+    }
+
+    .card-head {
+      padding: 16px 16px 10px;
+    }
+
+    .card-title {
+      color: #30292c;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .card-subtitle {
+      margin-top: 4px;
+      color: #918a8e;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      min-height: 74px;
+      padding: 0 16px;
+      border-top: 1px solid #ece7e9;
+    }
+
+    .row:first-of-type {
+      border-top: 0;
+    }
+
+    .row-main {
+      flex: 1;
+      min-width: 0;
+      padding-right: 12px;
+    }
+
+    .label {
+      color: #30292c;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .desc {
+      margin-top: 4px;
+      color: #928b8f;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .state {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .state-text {
+      min-width: 28px;
+      color: #6b6468;
+      font-size: 12px;
+      text-align: right;
+    }
+
+    .state-text.public {
+      color: #2f6e4c;
+      font-weight: 600;
+    }
+
+    .switch {
+      position: relative;
+      width: 46px;
+      height: 28px;
+      border-radius: 999px;
+      background: #d7d2d5;
+    }
+
+    .switch::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+    }
+
+    .switch.on {
+      background: #62c48d;
+    }
+
+    .switch.on::after {
+      left: 21px;
+    }
+
+    .tip-box {
+      margin-top: 16px;
+      padding: 14px 16px;
+      color: #8f888c;
+      font-size: 12px;
+      line-height: 1.8;
+      background: #f1eff0;
+      border-radius: 14px;
+    }
+
+    .save-btn {
+      width: 100%;
+      height: 52px;
+      margin-top: 18px;
+      border: 0;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      background: linear-gradient(145deg, #f0a36e, #e58a53);
+      border-radius: 14px;
+      box-shadow: 0 12px 24px rgba(226, 137, 86, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="hero">
+      <div class="nav">
+        <div class="nav-btn">‹</div>
+        <div class="nav-title">个人资料</div>
+        <div class="nav-btn nav-placeholder"></div>
+      </div>
+
+      <div class="profile">
+        <img
+          class="avatar"
+          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80"
+          alt="avatar"
+        />
+        <div class="name">林小满</div>
+        <div class="tip">完善资料，也可以决定哪些内容允许别人查看</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">基本资料</div>
+          <div class="card-subtitle">这里保持你现在资料页的主体结构，隐私设置单独放在下面。</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">隐私设置</div>
+          <div class="card-subtitle">控制别人点击你头像进入主页后，是否能看到这些内容。</div>
+        </div>
+
+        <div class="row">
+          <div class="row-main">
+            <div class="label">我的帖子</div>
+            <div class="desc">公开后，别人进入你的主页可以看到你允许展示的帖子记录。</div>
+          </div>
+          <div class="state">
+            <div class="state-text public">公开</div>
+            <div class="switch on"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-main">
+            <div class="label">我的点赞</div>
+            <div class="desc">公开后，别人可以看到你点赞过的公开帖子。</div>
+          </div>
+          <div class="state">
+            <div class="state-text">私密</div>
+            <div class="switch"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-main">
+            <div class="label">浏览历史</div>
+            <div class="desc">一般更偏私人使用，默认建议保持私密。</div>
+          </div>
+          <div class="state">
+            <div class="state-text">私密</div>
+            <div class="switch"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        建议默认值可以设成：我的帖子公开、我的点赞私密、浏览历史私密。这样既保留主页展示内容，也不会把过于个人的行为记录直接暴露出去。
+      </div>
+
+      <button class="save-btn">保存设置</button>
+    </div>
+  </div>
+</body>
+</html>

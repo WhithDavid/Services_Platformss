@@ -157,6 +157,13 @@ page {
 
 .search-btn::after { border: 0; }
 
+.category-sticky-wrap {
+  position: sticky;
+  z-index: 15;
+  background: #f7f7f8;
+  box-shadow: 0 8rpx 18rpx rgba(44, 39, 42, 0.04);
+}
+
 .category-scroll {
   height: 104rpx;
   background: transparent;
@@ -423,6 +430,10 @@ page {
 .empty-title { color: #686368; font-size: 27rpx; font-weight: 600; }
 .empty-subtitle { margin-top: 8rpx; color: #aaa5a8; font-size: 22rpx; }
 
+.loading-icon {
+  opacity: 0.8;
+}
+
 .post-card {
   position: relative;
   overflow: hidden;
@@ -613,6 +624,10 @@ page {
 
 .actions view { display: flex; align-items: center; }
 
+.actions .liked-action {
+  color: #e57a57;
+}
+
 .actions image {
   width: 25rpx;
   height: 25rpx;
@@ -630,4 +645,15 @@ page {
   margin-left: 4rpx;
   font-size: 27rpx;
   line-height: 1;
+}
+
+.load-more {
+  padding: 10rpx 0 18rpx;
+  text-align: center;
+  color: #9b9599;
+  font-size: 22rpx;
+}
+
+.load-more-end {
+  color: #b1abae;
 }

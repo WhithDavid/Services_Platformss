@@ -421,6 +421,18 @@ Page({
       item.images = item.mediaFiles.filter(media => media.type === 'image').map(media => media.url);
       item.videos = item.mediaFiles.filter(media => media.type === 'video').map(media => media.url);
       this.saveContent(item);
+      const currentUser = this.getCurrentUser();
+      if (currentUser && item.id) {
+        const userPostList = Array.isArray(currentUser.user_post)
+          ? currentUser.user_post
+          : (currentUser.user_post ? [currentUser.user_post] : []);
+        const nextUser = {
+          ...currentUser,
+          user_post: [item.id].concat(userPostList.filter(id => id !== item.id))
+        };
+        wx.setStorageSync(USER_STORAGE_KEY, nextUser);
+        wx.setStorageSync(LEGACY_USER_STORAGE_KEY, nextUser);
+      }
       this.resetForm();
 
       wx.showToast({

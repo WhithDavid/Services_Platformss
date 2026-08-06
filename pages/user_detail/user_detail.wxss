@@ -95,6 +95,27 @@ page {
   box-shadow: 0 8rpx 24rpx rgba(56, 46, 51, 0.04);
 }
 
+.privacy-card {
+  margin-top: 24rpx;
+}
+
+.card-head {
+  padding: 28rpx 24rpx 12rpx;
+}
+
+.card-title {
+  color: #30292c;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.card-subtitle {
+  margin-top: 8rpx;
+  color: #918a8e;
+  font-size: 22rpx;
+  line-height: 1.6;
+}
+
 .row {
   display: flex;
   align-items: center;
@@ -118,6 +139,54 @@ page {
   color: #30292c;
   font-size: 28rpx;
   font-weight: 600;
+}
+
+.privacy-row {
+  align-items: center;
+  min-height: 132rpx;
+}
+
+.privacy-main {
+  flex: 1;
+  min-width: 0;
+  padding-right: 20rpx;
+}
+
+.privacy-label {
+  color: #30292c;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.privacy-desc {
+  margin-top: 8rpx;
+  color: #928b8f;
+  font-size: 22rpx;
+  line-height: 1.6;
+}
+
+.privacy-action {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.privacy-state {
+  min-width: 60rpx;
+  margin-right: 14rpx;
+  color: #7a7377;
+  font-size: 22rpx;
+  text-align: right;
+}
+
+.privacy-state.is-public {
+  color: #2f6e4c;
+  font-weight: 600;
+}
+
+.privacy-switch {
+  transform: scale(0.88);
+  transform-origin: center right;
 }
 
 .input,
@@ -152,6 +221,21 @@ page {
 }
 
 .save-btn::after {
+  border: 0;
+}
+
+.logout-btn {
+  margin-top: 20rpx;
+  height: 84rpx;
+  color: #ba5e5e;
+  font-size: 28rpx;
+  line-height: 84rpx;
+  background: #fff;
+  border: 1rpx solid #ebe5e7;
+  border-radius: 18rpx;
+}
+
+.logout-btn::after {
   border: 0;
 }
 

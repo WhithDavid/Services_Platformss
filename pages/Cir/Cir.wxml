@@ -17,13 +17,15 @@
     </view>
   </view>
 
-  <scroll-view class="category-scroll" scroll-x show-scrollbar="{{false}}">
-    <view class="category-list">
-      <view class="{{index === handle_navigation_index ? 'category-item active' : 'category-item'}}" wx:for="{{handle_navigation}}" wx:key="index" data-nid="{{index}}" bindtap="clic">
-        {{item}}
+  <view class="category-sticky-wrap" style="top: 0; padding-top: {{statusBarHeight}}px;">
+    <scroll-view class="category-scroll" scroll-x show-scrollbar="{{false}}">
+      <view class="category-list">
+        <view class="{{index === handle_navigation_index ? 'category-item active' : 'category-item'}}" wx:for="{{handle_navigation}}" wx:key="index" data-nid="{{index}}" bindtap="clic">
+          {{item}}
+        </view>
       </view>
-    </view>
-  </scroll-view>
+    </scroll-view>
+  </view>
 
   <view class="notice-bar">
     <view class="notice-label"><view class="notice-dot"></view>校园公告</view>
@@ -70,14 +72,19 @@
   </view>
 
   <view class="post-list">
-    <view wx:if="{{posts.length === 0}}" class="empty">
+    <view wx:if="{{initialLoading && !hasLoadedOnce}}" class="empty">
+      <view class="empty-icon loading-icon"><view></view></view>
+      <view class="empty-title">正在加载帖子</view>
+      <view class="empty-subtitle">先为你准备前 15 条内容</view>
+    </view>
+    <view wx:elif="{{posts.length === 0}}" class="empty">
       <view class="empty-icon"><view></view></view>
       <view class="empty-title">暂时没有相关内容</view>
       <view class="empty-subtitle">换个关键词或分类试试看</view>
     </view>
     <view class="post-card type-{{item.type}}" wx:for="{{posts}}" wx:key="id" data-id="{{item.id}}" bindtap="toPostDetail">
       <view class="post-head">
-        <view class="avatar-wrap">
+        <view class="avatar-wrap" data-openid="{{item.userOpenid}}" catchtap="toUserProfile">
           <image class="avatar" src="{{item.avatar}}" mode="aspectFill"></image>
           <view class="online-dot"></view>
         </view>
@@ -132,9 +139,16 @@
       <view class="actions">
         <view class="action-view"><image src="/pages/images/watch.png"></image>{{item.views}}</view>
         <view><image src="/pages/images/comment.png"></image>{{item.comments}}</view>
-        <view><image src="/pages/images/like.png"></image>{{item.likes}}</view>
+        <view
+          class="{{item.isLiked ? 'liked-action' : ''}}"
+          data-id="{{item.id}}"
+          catchtap="togglePostLike"
+        ><image src="/pages/images/like.png"></image>{{item.likes}}</view>
         <view class="detail-link">查看详情 <text>›</text></view>
       </view>
     </view>
+
+    <view wx:if="{{posts.length > 0 && loadingMore}}" class="load-more">正在加载更多帖子...</view>
+    <view wx:elif="{{posts.length > 0 && !hasMorePosts}}" class="load-more load-more-end">已经到底了</view>
   </view>
 </view>

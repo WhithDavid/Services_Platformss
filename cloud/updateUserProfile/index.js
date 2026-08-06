@@ -22,7 +22,10 @@ exports.main = async (event) => {
     user_bio: (profile.user_bio || '').trim(),
     user_major: (profile.user_major || '').trim(),
     user_campus: profile.user_campus || '育才校区',
-    studentTag: profile.studentTag || '校园用户'
+    studentTag: profile.studentTag || '校园用户',
+    post_public: profile.post_public !== false,
+    like_public: profile.like_public !== false,
+    history_public: profile.history_public !== false
   };
 
   const userRes = await db.collection('user').where({

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>他人主页预览</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px 0;
+      background: #efeff1;
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: #282528;
+    }
+
+    .phone {
+      width: 390px;
+      margin: 0 auto;
+      background: #f7f7f8;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 18px 48px rgba(30, 24, 27, 0.14);
+    }
+
+    .hero {
+      position: relative;
+      padding: 48px 16px 34px;
+      background: linear-gradient(145deg, #f8c79f 0%, #f2a978 100%);
+      border-radius: 0 0 24px 24px;
+      overflow: hidden;
+    }
+
+    .nav-bar {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #25211f;
+    }
+
+    .back-btn,
+    .nav-action {
+      min-width: 28px;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .nav-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .profile {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: flex-start;
+      margin-top: 16px;
+      padding: 6px 2px 0;
+    }
+
+    .avatar-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      margin-right: 12px;
+    }
+
+    .avatar-wrap {
+      position: relative;
+    }
+
+    .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255, 255, 255, 0.72);
+      box-shadow: 0 8px 18px rgba(105, 66, 41, 0.13);
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .avatar-status {
+      position: absolute;
+      right: 2px;
+      bottom: 3px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      border: 2px solid #f4b583;
+      background: #47c982;
+    }
+
+    .follow-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 7px;
+    }
+
+    .follow-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 34px;
+    }
+
+    .follow-count {
+      font-size: 11px;
+      font-weight: 600;
+      color: #474246;
+      line-height: 1;
+    }
+
+    .follow-label {
+      margin-top: 4px;
+      font-size: 10px;
+      color: #615c60;
+      line-height: 1;
+    }
+
+    .follow-divider {
+      margin-top: -2px;
+      color: #726d71;
+      font-size: 11px;
+      line-height: 1;
+    }
+
+    .profile-main {
+      flex: 1;
+      min-width: 0;
+      padding-top: 1px;
+    }
+
+    .name-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #282321;
+    }
+
+    .identity {
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      color: #75533c;
+      background: rgba(255, 255, 255, 0.48);
+    }
+
+    .desc {
+      margin-top: 5px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: rgba(54, 44, 38, 0.74);
+    }
+
+    .follow-action {
+      flex-shrink: 0;
+      align-self: flex-start;
+      margin-left: 10px;
+      padding-top: 1px;
+    }
+
+    .follow-btn {
+      min-width: 72px;
+      height: 30px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 999px;
+      background: #222222;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: 0 10px 18px rgba(32, 25, 28, 0.12);
+      cursor: default;
+    }
+
+    .hero-decoration {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .decoration-one {
+      top: -90px;
+      right: -70px;
+      width: 200px;
+      height: 200px;
+    }
+
+    .decoration-two {
+      right: 70px;
+      bottom: 18px;
+      width: 72px;
+      height: 72px;
+    }
+
+    .summary-card,
+    .content-card {
+      margin: 0 16px;
+      background: #fff;
+      border: 1px solid #e8e5e7;
+      border-radius: 18px;
+      box-shadow: 0 8px 18px rgba(56, 46, 51, 0.045);
+    }
+
+    .summary-card {
+      position: relative;
+      z-index: 3;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: -28px;
+      padding: 16px 8px;
+    }
+
+    .summary-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .summary-value {
+      color: #2d282c;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .summary-label {
+      margin-top: 6px;
+      color: #7b7478;
+      font-size: 12px;
+    }
+
+    .section {
+      margin-top: 18px;
+      padding-bottom: 18px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 19px 10px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2a2629;
+    }
+
+    .section-subtitle {
+      margin-top: 3px;
+      font-size: 12px;
+      color: #a09a9e;
+    }
+
+    .section-more {
+      font-size: 12px;
+      color: #777176;
+    }
+
+    .content-card {
+      padding: 12px 10px 8px;
+    }
+
+    .content-switch-row {
+      display: flex;
+      gap: 24px;
+      padding: 0 6px 2px;
+    }
+
+    .content-switch-item {
+      position: relative;
+      padding-bottom: 8px;
+      font-size: 13px;
+      color: #9e989c;
+      font-weight: 500;
+    }
+
+    .content-switch-item.active {
+      color: #222;
+      font-weight: 700;
+    }
+
+    .content-switch-item.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 3px;
+      border-radius: 999px;
+      background: #222;
+    }
+
+    .content-panel {
+      margin-top: 12px;
+      border-top: 1px solid #efedef;
+    }
+
+    .list-row {
+      display: flex;
+      align-items: center;
+      min-height: 96px;
+      padding: 14px 4px;
+      border-bottom: 1px solid #f1eef0;
+    }
+
+    .list-row:last-child {
+      border-bottom: 0;
+    }
+
+    .list-mark {
+      width: 38px;
+      height: 38px;
+      margin-right: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      background: #fff0e4;
+      color: #6c5444;
+      font-size: 15px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .list-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .list-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .list-title {
+      flex: 1;
+      min-width: 0;
+      font-size: 15px;
+      font-weight: 600;
+      color: #383337;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .post-tag {
+      flex-shrink: 0;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: #f3f0f1;
+      color: #6d6669;
+      font-size: 11px;
+    }
+
+    .list-desc {
+      margin-top: 5px;
+      font-size: 12px;
+      color: #aaa4a8;
+      line-height: 1.6;
+    }
+
+    .list-stats {
+      display: flex;
+      gap: 14px;
+      margin-top: 9px;
+      font-size: 12px;
+      color: #8f888d;
+    }
+
+    .tip {
+      padding: 0 19px 24px;
+      font-size: 12px;
+      color: #8b8488;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="hero">
+      <div class="nav-bar">
+        <div class="back-btn">‹</div>
+        <div class="nav-title">用户主页</div>
+        <div class="nav-action">⋯</div>
+      </div>
+
+      <div class="profile">
+        <div class="avatar-block">
+          <div class="avatar-wrap">
+            <img
+              class="avatar"
+              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80"
+              alt="avatar"
+            />
+            <div class="avatar-status"></div>
+          </div>
+
+          <div class="follow-row">
+            <div class="follow-item">
+              <div class="follow-count">89</div>
+              <div class="follow-label">关注</div>
+            </div>
+            <div class="follow-divider">|</div>
+            <div class="follow-item">
+              <div class="follow-count">1264</div>
+              <div class="follow-label">粉丝</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-main">
+          <div class="name-row">
+            <div class="name">林小满</div>
+            <div class="identity">计算机学院</div>
+          </div>
+          <div class="desc">喜欢记录校园日常，也会分享课程资料和二手闲置，看到消息一般都会回。</div>
+        </div>
+
+        <div class="follow-action">
+          <button class="follow-btn">+ 关注</button>
+        </div>
+      </div>
+
+      <div class="hero-decoration decoration-one"></div>
+      <div class="hero-decoration decoration-two"></div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-item">
+        <div class="summary-value">42</div>
+        <div class="summary-label">公开帖子</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-value">318</div>
+        <div class="summary-label">获赞</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-value">16</div>
+        <div class="summary-label">被收藏</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-title">TA的内容</div>
+          <div class="section-subtitle">展示用户公开可见的内容</div>
+        </div>
+        <div class="section-more">Demo</div>
+      </div>
+
+      <div class="content-card">
+        <div class="content-switch-row">
+          <div class="content-switch-item active">TA的帖子</div>
+          <div class="content-switch-item">TA的点赞</div>
+        </div>
+
+        <div class="content-panel">
+          <div class="list-row">
+            <div class="list-mark">帖</div>
+            <div class="list-main">
+              <div class="list-top">
+                <div class="list-title">图书馆三楼靠窗的位置下午阳光特别好</div>
+                <div class="post-tag">校园动态</div>
+              </div>
+              <div class="list-desc">最近准备期末复习，发现三楼新换的座椅坐久了也不累，顺手推荐给大家。</div>
+              <div class="list-stats">
+                <div>点赞 43</div>
+                <div>评论 18</div>
+                <div>浏览 529</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="list-row">
+            <div class="list-mark">帖</div>
+            <div class="list-main">
+              <div class="list-top">
+                <div class="list-title">出一个九成新的电风扇，宿舍自提</div>
+                <div class="post-tag">二手市场</div>
+              </div>
+              <div class="list-desc">风力很足，没有噪音，周末前拿走的话可以再便宜一点。</div>
+              <div class="list-stats">
+                <div>点赞 27</div>
+                <div>评论 9</div>
+                <div>浏览 301</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="list-row">
+            <div class="list-mark">赞</div>
+            <div class="list-main">
+              <div class="list-top">
+                <div class="list-title">示例：切到“TA的点赞”后，也沿用同样的列表结构</div>
+                <div class="post-tag">预览说明</div>
+              </div>
+              <div class="list-desc">正式写代码时可以只切换数据源，不用重新做一套样式，页面会更统一。</div>
+              <div class="list-stats">
+                <div>点赞 65</div>
+                <div>评论 23</div>
+                <div>浏览 740</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      这版 demo 重点是先确认“他人主页”的信息区布局和关注按钮位置。当前我先按“只展示公开内容”的思路来做，所以没有放浏览历史、帖子管理按钮这些仅自己可见的功能。
+    </div>
+  </div>
+</body>
+</html>

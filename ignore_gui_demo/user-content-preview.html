@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的页面内容区预览</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #f7f7f8;
+      color: #282528;
+    }
+
+    .phone {
+      width: 390px;
+      min-height: 100vh;
+      margin: 0 auto;
+      background: #f7f7f8;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 18px 18px 88px;
+      background: linear-gradient(145deg, #f8c79f 0%, #f2a978 100%);
+      border-radius: 0 0 28px 28px;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .hero::before {
+      top: -70px;
+      right: -55px;
+      width: 180px;
+      height: 180px;
+    }
+
+    .hero::after {
+      right: 78px;
+      bottom: 24px;
+      width: 68px;
+      height: 68px;
+    }
+
+    .nav-title {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      color: #25211f;
+      line-height: 44px;
+    }
+
+    .profile {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+      padding: 8px 4px 0;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      margin-right: 14px;
+      flex-shrink: 0;
+    }
+
+    .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255, 255, 255, 0.72);
+      background: rgba(255, 255, 255, 0.62);
+    }
+
+    .avatar-status {
+      position: absolute;
+      right: 2px;
+      bottom: 4px;
+      width: 12px;
+      height: 12px;
+      border: 3px solid #f4b583;
+      border-radius: 50%;
+      background: #47c982;
+    }
+
+    .profile-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .name {
+      font-size: 22px;
+      font-weight: 700;
+      color: #282321;
+    }
+
+    .identity {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: #75533c;
+      background: rgba(255, 255, 255, 0.48);
+    }
+
+    .desc {
+      margin-top: 8px;
+      color: rgba(54, 44, 38, 0.68);
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .profile-arrow {
+      padding-left: 10px;
+      color: rgba(49, 41, 37, 0.65);
+      font-size: 26px;
+    }
+
+    .card {
+      margin: 0 16px;
+      background: #fff;
+      border: 1px solid #e8e5e7;
+      border-radius: 20px;
+      box-shadow: 0 8px 22px rgba(56, 46, 51, 0.045);
+    }
+
+    .task-card {
+      margin-top: -44px;
+      position: relative;
+      z-index: 2;
+      padding: 20px 8px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .task-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .task-icon {
+      width: 42px;
+      height: 42px;
+      margin: 0 auto;
+      border-radius: 14px;
+      background: #fff0e4;
+      color: #7a563d;
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .task-count {
+      position: absolute;
+      top: -4px;
+      right: 12px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 4px;
+      border-radius: 999px;
+      background: #ee7658;
+      color: #fff;
+      font-size: 11px;
+      line-height: 18px;
+    }
+
+    .task-label {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #5f595d;
+    }
+
+    .section {
+      margin-top: 18px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 20px 10px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #2a2629;
+    }
+
+    .section-subtitle {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #a09a9e;
+    }
+
+    .section-more {
+      font-size: 13px;
+      color: #777176;
+    }
+
+    .content-card {
+      padding: 18px 16px 10px;
+    }
+
+    .switch-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 24px;
+      padding-bottom: 2px;
+    }
+
+    .switch-btn {
+      position: relative;
+      padding: 0 0 10px;
+      border: 0;
+      background: transparent;
+      color: #9e989c;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .switch-btn::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 3px;
+      border-radius: 999px;
+      background: transparent;
+      transition: all 0.2s ease;
+    }
+
+    .switch-btn.active {
+      color: #222222;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .switch-btn.active::after {
+      background: #222222;
+    }
+
+    .panel {
+      margin-top: 18px;
+      border-top: 1px solid #efedef;
+    }
+
+    .panel-item {
+      display: none;
+      padding-top: 10px;
+    }
+
+    .panel-item.active {
+      display: block;
+    }
+
+    .list-row {
+      display: flex;
+      align-items: center;
+      min-height: 88px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f1eef0;
+      position: relative;
+    }
+
+    .list-row:last-child {
+      border-bottom: 0;
+    }
+
+    .list-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #6c5444;
+      background: #fff0e4;
+      flex-shrink: 0;
+    }
+
+    .list-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .list-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .list-title {
+      flex: 1;
+      font-size: 15px;
+      color: #383337;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .post-tools {
+      position: relative;
+      flex-shrink: 0;
+      margin-top: -2px;
+    }
+
+    .status-tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 48px;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      color: #6d6669;
+      background: #f3f0f1;
+    }
+
+    .status-tag.public {
+      color: #4f6b59;
+      background: #edf7ef;
+    }
+
+    .status-tag.private {
+      color: #8a7047;
+      background: #fbf2e5;
+    }
+
+    .more-btn {
+      width: 24px;
+      height: 24px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: #8b8589;
+      font-size: 18px;
+      line-height: 24px;
+      cursor: pointer;
+    }
+
+    .post-menu {
+      position: absolute;
+      top: 30px;
+      right: 0;
+      width: 124px;
+      padding: 6px 0;
+      background: #fff;
+      border: 1px solid #ece8ea;
+      border-radius: 14px;
+      box-shadow: 0 10px 28px rgba(32, 25, 28, 0.08);
+      display: none;
+      z-index: 3;
+    }
+
+    .post-tools.active .post-menu {
+      display: block;
+    }
+
+    .menu-item {
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #3a3538;
+      cursor: pointer;
+    }
+
+    .menu-item + .menu-item {
+      border-top: 1px solid #f3eff1;
+    }
+
+    .menu-item.danger {
+      color: #cf6666;
+    }
+
+    .list-desc {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #aaa4a8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .list-stats {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+      color: #8f888d;
+      font-size: 12px;
+    }
+
+    .list-stat {
+      white-space: nowrap;
+    }
+
+    .version {
+      padding: 22px 0 24px;
+      text-align: center;
+      color: #b8b2b6;
+      font-size: 12px;
+    }
+
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(22, 18, 20, 0.34);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 20;
+    }
+
+    .modal-mask.show {
+      display: flex;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 310px;
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 18px 44px rgba(25, 20, 22, 0.15);
+    }
+
+    .modal-body {
+      padding: 24px 22px 18px;
+      text-align: center;
+    }
+
+    .modal-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #2b2629;
+    }
+
+    .modal-text {
+      margin-top: 10px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #7f787c;
+    }
+
+    .modal-actions {
+      display: flex;
+      border-top: 1px solid #f0ecee;
+    }
+
+    .modal-btn {
+      flex: 1;
+      height: 50px;
+      border: 0;
+      background: #fff;
+      font-size: 15px;
+      color: #5f595d;
+      cursor: pointer;
+    }
+
+    .modal-btn + .modal-btn {
+      border-left: 1px solid #f0ecee;
+    }
+
+    .modal-btn.danger {
+      color: #cf6666;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="hero">
+      <div class="nav-title">我的</div>
+
+      <div class="profile">
+        <div class="avatar-wrap">
+          <img class="avatar" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80" alt="avatar">
+          <div class="avatar-status"></div>
+        </div>
+
+        <div class="profile-main">
+          <div class="name-row">
+            <div class="name">小鱼饼干呀</div>
+            <div class="identity">校园用户</div>
+          </div>
+          <div class="desc">点这里可以编辑简介，下面切换不同按钮查看不同内容</div>
+        </div>
+
+        <div class="profile-arrow">›</div>
+      </div>
+    </div>
+
+    <div class="card task-card">
+      <div class="task-item">
+        <div class="task-icon">发</div>
+        <div class="task-count">2</div>
+        <div class="task-label">我发布的</div>
+      </div>
+      <div class="task-item">
+        <div class="task-icon">接</div>
+        <div class="task-count">1</div>
+        <div class="task-label">我接取的</div>
+      </div>
+      <div class="task-item">
+        <div class="task-icon">进</div>
+        <div class="task-count">1</div>
+        <div class="task-label">进行中</div>
+      </div>
+      <div class="task-item">
+        <div class="task-icon">完</div>
+        <div class="task-count">6</div>
+        <div class="task-label">已完成</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-title">我的内容</div>
+          <div class="section-subtitle">点击不同按钮切换不同内容列表</div>
+        </div>
+        <div class="section-more">可切换</div>
+      </div>
+
+      <div class="card content-card">
+        <div class="switch-row">
+          <button class="switch-btn active" data-tab="posts">我的帖子</button>
+          <button class="switch-btn" data-tab="favorites">我的收藏</button>
+          <button class="switch-btn" data-tab="history">浏览历史</button>
+        </div>
+
+        <div class="panel">
+          <div class="panel-item active" data-panel="posts">
+            <div class="list-row">
+              <div class="list-mark">帖</div>
+              <div class="list-main">
+                <div class="list-head">
+                  <div class="list-title">昨晚在宿舍楼下捡到一卡通，有人认识失主吗</div>
+                  <div class="post-tools active">
+                    <span class="status-tag public">公开</span>
+                    <button class="more-btn" type="button">•••</button>
+                    <div class="post-menu">
+                      <div class="menu-item">设为公开</div>
+                      <div class="menu-item">仅自己可见</div>
+                      <div class="menu-item danger">删除帖子</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list-desc">失物招领 · 2 小时前更新</div>
+                <div class="list-stats">
+                  <div class="list-stat">点赞 18</div>
+                  <div class="list-stat">评论 6</div>
+                  <div class="list-stat">浏览 132</div>
+                </div>
+              </div>
+            </div>
+            <div class="list-row">
+              <div class="list-mark">帖</div>
+              <div class="list-main">
+                <div class="list-head">
+                  <div class="list-title">图书馆三楼自习位体验分享，靠窗位置很安静</div>
+                  <div class="post-tools">
+                    <span class="status-tag private">仅自己可见</span>
+                    <button class="more-btn" type="button">•••</button>
+                    <div class="post-menu">
+                      <div class="menu-item">设为公开</div>
+                      <div class="menu-item">仅自己可见</div>
+                      <div class="menu-item danger">删除帖子</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list-desc">校园动态 · 昨天</div>
+                <div class="list-stats">
+                  <div class="list-stat">点赞 24</div>
+                  <div class="list-stat">评论 12</div>
+                  <div class="list-stat">浏览 208</div>
+                </div>
+              </div>
+            </div>
+            <div class="list-row">
+              <div class="list-mark">帖</div>
+              <div class="list-main">
+                <div class="list-head">
+                  <div class="list-title">转一台九成新的台灯，宿舍自提</div>
+                  <div class="post-tools">
+                    <span class="status-tag public">公开</span>
+                    <button class="more-btn" type="button">•••</button>
+                    <div class="post-menu">
+                      <div class="menu-item">设为公开</div>
+                      <div class="menu-item">仅自己可见</div>
+                      <div class="menu-item danger" data-action="delete">删除帖子</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list-desc">二手市场 · 3 天前</div>
+                <div class="list-stats">
+                  <div class="list-stat">点赞 9</div>
+                  <div class="list-stat">评论 4</div>
+                  <div class="list-stat">浏览 96</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-item" data-panel="favorites">
+            <div class="list-row">
+              <div class="list-mark">藏</div>
+              <div class="list-main">
+                <div class="list-title">校门口新开的米线店味道怎么样</div>
+                <div class="list-desc">已收藏 · 校园动态</div>
+                <div class="list-stats">
+                  <div class="list-stat">点赞 33</div>
+                  <div class="list-stat">评论 15</div>
+                  <div class="list-stat">浏览 268</div>
+                </div>
+              </div>
+            </div>
+            <div class="list-row">
+              <div class="list-mark">藏</div>
+              <div class="list-main">
+                <div class="list-title">英语老师课堂评分汇总</div>
+                <div class="list-desc">已收藏 · 校园评分</div>
+                <div class="list-stats">
+                  <div class="list-stat">点赞 45</div>
+                  <div class="list-stat">评论 21</div>
+                  <div class="list-stat">浏览 352</div>
+                </div>
+              </div>
+            </div>
+            <div class="list-row">
+              <div class="list-mark">藏</div>
+              <div class="list-main">
+                <div class="list-title">求一个闲置小风扇，宿舍用</div>
+                <div class="list-desc">已收藏 · 二手市场</div>
+                <div class="list-stats">
+                  <div class="list-stat">点赞 12</div>
+                  <div class="list-stat">评论 7</div>
+                  <div class="list-stat">浏览 118</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-item" data-panel="history">
+            <div class="list-row">
+              <div class="list-mark">历</div>
+              <div class="list-main">
+                <div class="list-title">有人最近办过校园宽带吗，速度怎么样</div>
+                <div class="list-desc">刚刚浏览 · 校园动态</div>
+                <div class="list-stats">
+                  <div class="list-stat">点赞 16</div>
+                  <div class="list-stat">评论 9</div>
+                  <div class="list-stat">浏览 146</div>
+                </div>
+              </div>
+            </div>
+            <div class="list-row">
+              <div class="list-mark">历</div>
+              <div class="list-main">
+                <div class="list-title">帮拿外卖到桂苑 5 栋，悬赏 3 元</div>
+                <div class="list-desc">10 分钟前浏览 · 悬赏</div>
+                <div class="list-stats">
+                  <div class="list-stat">点赞 8</div>
+                  <div class="list-stat">评论 3</div>
+                  <div class="list-stat">浏览 74</div>
+                </div>
+              </div>
+            </div>
+            <div class="list-row">
+              <div class="list-mark">历</div>
+              <div class="list-main">
+                <div class="list-title">求推荐靠谱打印店，明天早上要交材料</div>
+                <div class="list-desc">今天浏览 · 校园求助</div>
+                <div class="list-stats">
+                  <div class="list-stat">点赞 19</div>
+                  <div class="list-stat">评论 11</div>
+                  <div class="list-stat">浏览 184</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="version">校园生活圈 · 让校园生活更简单</div>
+  </div>
+
+  <div class="modal-mask" id="deleteModal">
+    <div class="modal-card">
+      <div class="modal-body">
+        <div class="modal-title">删除帖子</div>
+        <div class="modal-text">删除帖子之后将无法恢复，是否继续</div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn" type="button" id="cancelDelete">取消</button>
+        <button class="modal-btn danger" type="button" id="confirmDelete">继续删除</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const buttons = document.querySelectorAll('.switch-btn');
+    const panels = document.querySelectorAll('.panel-item');
+    const moreButtons = document.querySelectorAll('.more-btn');
+    const deleteModal = document.getElementById('deleteModal');
+    const confirmDelete = document.getElementById('confirmDelete');
+    const cancelDelete = document.getElementById('cancelDelete');
+    let pendingDeleteRow = null;
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const tab = button.dataset.tab;
+
+        buttons.forEach((item) => item.classList.remove('active'));
+        panels.forEach((item) => item.classList.remove('active'));
+
+        button.classList.add('active');
+        document.querySelector(`.panel-item[data-panel="${tab}"]`).classList.add('active');
+      });
+    });
+
+    moreButtons.forEach((button) => {
+      button.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const tools = button.closest('.post-tools');
+        const isActive = tools.classList.contains('active');
+
+        document.querySelectorAll('.post-tools').forEach((item) => {
+          item.classList.remove('active');
+        });
+
+        if (!isActive) {
+          tools.classList.add('active');
+        }
+      });
+    });
+
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.post-tools').forEach((item) => {
+        item.classList.remove('active');
+      });
+    });
+
+    document.querySelectorAll('.menu-item[data-action="delete"]').forEach((item) => {
+      item.addEventListener('click', (event) => {
+        event.stopPropagation();
+        pendingDeleteRow = item.closest('.list-row');
+        deleteModal.classList.add('show');
+        document.querySelectorAll('.post-tools').forEach((tool) => {
+          tool.classList.remove('active');
+        });
+      });
+    });
+
+    cancelDelete.addEventListener('click', () => {
+      pendingDeleteRow = null;
+      deleteModal.classList.remove('show');
+    });
+
+    confirmDelete.addEventListener('click', () => {
+      if (pendingDeleteRow) {
+        pendingDeleteRow.remove();
+      }
+      pendingDeleteRow = null;
+      deleteModal.classList.remove('show');
+    });
+
+    deleteModal.addEventListener('click', (event) => {
+      if (event.target === deleteModal) {
+        pendingDeleteRow = null;
+        deleteModal.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>

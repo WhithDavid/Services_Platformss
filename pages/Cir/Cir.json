@@ -1,5 +1,7 @@
 {
   "navigationStyle": "custom",
   "navigationBarTitleText": "圈子",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 120,
   "usingComponents": {}
 }

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>我的页面-关注粉丝预览</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px 0;
+      background: #efeff1;
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: #282528;
+    }
+
+    .phone {
+      width: 390px;
+      margin: 0 auto;
+      background: #f7f7f8;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 18px 48px rgba(30, 24, 27, 0.14);
+    }
+
+    .hero {
+      position: relative;
+      padding: 48px 16px 34px;
+      background: linear-gradient(145deg, #f8c79f 0%, #f2a978 100%);
+      border-radius: 0 0 24px 24px;
+      overflow: hidden;
+    }
+
+    .nav-title {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+      color: #25211f;
+    }
+
+    .profile {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: flex-start;
+      margin-top: 16px;
+      padding: 6px 2px 0;
+    }
+
+    .avatar-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      margin-right: 14px;
+    }
+
+    .avatar-wrap {
+      position: relative;
+    }
+
+    .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255, 255, 255, 0.72);
+      box-shadow: 0 8px 18px rgba(105, 66, 41, 0.13);
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .avatar-status {
+      position: absolute;
+      right: 2px;
+      bottom: 3px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 3px solid #f4b583;
+      background: #47c982;
+    }
+
+    .profile-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .name-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #282321;
+    }
+
+    .identity {
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      color: #75533c;
+      background: rgba(255, 255, 255, 0.48);
+    }
+
+    .desc {
+      margin-top: 6px;
+      color: rgba(54, 44, 38, 0.7);
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .follow-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .follow-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 38px;
+      color: #6f696d;
+    }
+
+    .follow-count {
+      font-size: 12px;
+      font-weight: 600;
+      color: #5e585c;
+      line-height: 1;
+    }
+
+    .follow-label {
+      margin-top: 4px;
+      font-size: 11px;
+      color: #767074;
+      line-height: 1;
+    }
+
+    .follow-divider {
+      margin-top: -2px;
+      color: #8b8589;
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .profile-arrow {
+      flex-shrink: 0;
+      padding-left: 14px;
+      color: rgba(49, 41, 37, 0.65);
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .hero-decoration {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .decoration-one {
+      top: -90px;
+      right: -70px;
+      width: 200px;
+      height: 200px;
+    }
+
+    .decoration-two {
+      right: 70px;
+      bottom: 18px;
+      width: 72px;
+      height: 72px;
+    }
+
+    .content-card {
+      margin: 0 16px;
+      background: #fff;
+      border: 1px solid #e8e5e7;
+      border-radius: 18px;
+      box-shadow: 0 8px 18px rgba(56, 46, 51, 0.045);
+    }
+
+    .task-card {
+      position: relative;
+      z-index: 3;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      margin-top: -28px;
+      padding: 18px 8px;
+    }
+
+    .task-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .task-icon {
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      background: #fff0e4;
+      color: #7a563d;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .task-count {
+      position: absolute;
+      top: -4px;
+      right: 16px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 4px;
+      border-radius: 999px;
+      background: #ee7658;
+      color: #fff;
+      font-size: 10px;
+      line-height: 18px;
+      text-align: center;
+      border: 2px solid #fff;
+    }
+
+    .task-label {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #5f595d;
+    }
+
+    .section {
+      margin-top: 18px;
+      padding-bottom: 18px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 19px 10px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2a2629;
+    }
+
+    .section-subtitle {
+      margin-top: 3px;
+      font-size: 12px;
+      color: #a09a9e;
+    }
+
+    .section-more {
+      font-size: 12px;
+      color: #777176;
+    }
+
+    .content-list-card {
+      padding: 12px 10px 8px;
+    }
+
+    .content-switch-row {
+      display: flex;
+      gap: 24px;
+      padding: 0 6px 2px;
+    }
+
+    .content-switch-item {
+      position: relative;
+      padding-bottom: 8px;
+      font-size: 13px;
+      color: #9e989c;
+      font-weight: 500;
+    }
+
+    .content-switch-item.active {
+      color: #222;
+      font-weight: 700;
+    }
+
+    .content-switch-item.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 3px;
+      border-radius: 999px;
+      background: #222;
+    }
+
+    .content-panel {
+      margin-top: 12px;
+      border-top: 1px solid #efedef;
+    }
+
+    .list-row {
+      display: flex;
+      align-items: center;
+      min-height: 92px;
+      padding: 14px 4px;
+      border-bottom: 1px solid #f1eef0;
+    }
+
+    .list-row:last-child {
+      border-bottom: 0;
+    }
+
+    .list-mark {
+      width: 38px;
+      height: 38px;
+      margin-right: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      background: #fff0e4;
+      color: #6c5444;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .list-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .list-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #383337;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .list-desc {
+      margin-top: 5px;
+      font-size: 12px;
+      color: #aaa4a8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .list-stats {
+      display: flex;
+      gap: 14px;
+      margin-top: 9px;
+      font-size: 12px;
+      color: #8f888d;
+    }
+
+    .tip {
+      padding: 0 19px 24px;
+      font-size: 12px;
+      color: #8b8488;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="hero">
+      <div class="nav-title">我的</div>
+
+      <div class="profile">
+        <div class="avatar-block">
+          <div class="avatar-wrap">
+            <img
+              class="avatar"
+              src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80"
+              alt="avatar"
+            />
+            <div class="avatar-status"></div>
+          </div>
+
+          <div class="follow-row">
+            <div class="follow-item">
+              <div class="follow-count">128</div>
+              <div class="follow-label">关注</div>
+            </div>
+            <div class="follow-divider">|</div>
+            <div class="follow-item">
+              <div class="follow-count">2436</div>
+              <div class="follow-label">粉丝</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-main">
+          <div class="name-row">
+            <div class="name">雄安不点</div>
+            <div class="identity">校园用户</div>
+          </div>
+          <div class="desc">我喜欢记录校园里有意思的人和事</div>
+        </div>
+
+        <div class="profile-arrow">›</div>
+      </div>
+
+      <div class="hero-decoration decoration-one"></div>
+      <div class="hero-decoration decoration-two"></div>
+    </div>
+
+    <div class="content-card task-card">
+      <div class="task-item">
+        <div class="task-icon">悬</div>
+        <div class="task-count">2</div>
+        <div class="task-label">待处理</div>
+      </div>
+      <div class="task-item">
+        <div class="task-icon">进</div>
+        <div class="task-count">1</div>
+        <div class="task-label">进行中</div>
+      </div>
+      <div class="task-item">
+        <div class="task-icon">完</div>
+        <div class="task-count">8</div>
+        <div class="task-label">已完成</div>
+      </div>
+      <div class="task-item">
+        <div class="task-icon">赏</div>
+        <div class="task-count">6</div>
+        <div class="task-label">我的悬赏</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-title">我的内容</div>
+          <div class="section-subtitle">可以继续保留你现在的切换内容区</div>
+        </div>
+        <div class="section-more">预览版</div>
+      </div>
+
+      <div class="content-card content-list-card">
+        <div class="content-switch-row">
+          <div class="content-switch-item active">我的帖子</div>
+          <div class="content-switch-item">我的点赞</div>
+          <div class="content-switch-item">浏览历史</div>
+        </div>
+
+        <div class="content-panel">
+          <div class="list-row">
+            <div class="list-mark">帖</div>
+            <div class="list-main">
+              <div class="list-title">食堂新开的窗口味道还不错</div>
+              <div class="list-desc">今天中午去试了一下，分量还可以，适合下课赶时间的时候吃。</div>
+              <div class="list-stats">
+                <div>点赞 31</div>
+                <div>评论 12</div>
+                <div>浏览 302</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="list-row">
+            <div class="list-mark">帖</div>
+            <div class="list-main">
+              <div class="list-title">图书馆三楼空调终于修好了</div>
+              <div class="list-desc">下午去自习舒服很多，靠窗那排位置采光也不错。</div>
+              <div class="list-stats">
+                <div>点赞 18</div>
+                <div>评论 7</div>
+                <div>浏览 186</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      这版重点只是预览“关注 / 粉丝”在个人信息区里的展示方式，下面内容区保持你现在已经确认过的结构不变。
+    </div>
+  </div>
+</body>
+</html>

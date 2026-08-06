@@ -8,7 +8,7 @@
 
     <view wx:if="{{post}}" class="summary-card type-{{post.type}}">
       <view class="author-row">
-        <image class="avatar" src="{{post.avatar}}" mode="aspectFill"></image>
+        <image class="avatar" src="{{post.avatar}}" mode="aspectFill" data-openid="{{post.userOpenid}}" bindtap="toUserProfile"></image>
         <view class="author-meta">
           <view class="author-name">{{post.author}}</view>
           <view class="author-sub">{{post.createdAt}} · 来自校园生活圈</view>
@@ -48,7 +48,9 @@
       <view class="meta-row">
         <view class="meta-pill">浏览 {{post.views}}</view>
         <view class="meta-pill">评论 {{commentTotal}}</view>
-        <view class="meta-pill">点赞 {{post.likes}}</view>
+        <view class="meta-pill like-pill {{post.isLiked ? 'active' : ''}}" bindtap="togglePostLike">
+          {{post.isLiked ? '已赞' : '点赞'}} {{post.likes}}
+        </view>
         <view class="meta-pill">状态 {{post.status}}</view>
         <view wx:if="{{post.price}}" class="meta-pill">￥{{post.price}}</view>
         <view wx:if="{{post.score}}" class="meta-pill">评分 {{post.score}}</view>
@@ -79,7 +81,7 @@
     <view wx:elif="{{comments.length}}" class="comment-wrap">
       <view wx:for="{{comments}}" wx:for-item="comment" wx:key="id" class="comment-card">
         <view class="comment-main">
-          <image class="mini-avatar" src="{{comment.userIcon}}" mode="aspectFill"></image>
+          <image class="mini-avatar" src="{{comment.userIcon}}" mode="aspectFill" data-openid="{{comment.userOpenid}}" bindtap="toUserProfile"></image>
           <view class="comment-body">
             <view class="comment-user">{{comment.userName}}</view>
             <view class="comment-time">{{comment.time}}</view>
@@ -117,7 +119,7 @@
             <view wx:if="{{comment.visibleReplies.length}}" class="reply-list">
               <view wx:for="{{comment.visibleReplies}}" wx:for-item="reply" wx:key="id" class="reply-card">
                 <view class="comment-main reply-main">
-                  <image class="mini-avatar reply-avatar" src="{{reply.userIcon}}" mode="aspectFill"></image>
+                  <image class="mini-avatar reply-avatar" src="{{reply.userIcon}}" mode="aspectFill" data-openid="{{reply.userOpenid}}" bindtap="toUserProfile"></image>
                   <view class="comment-body">
                     <view class="comment-user reply-user">{{reply.userName}}</view>
                     <view class="comment-time">{{reply.time}}</view>

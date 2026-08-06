@@ -5,6 +5,7 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 exports.main = async (event) => {
   const wxContext = cloud.getWXContext();
   const db = cloud.database();
+  const _ = db.command;
   const payload = event.payload || {};
   const user_openid = wxContext.OPENID;
 
@@ -24,7 +25,7 @@ exports.main = async (event) => {
 
   const userRes = await db.collection('user').where({
     user_openid
-  }).get();
+  }).limit(1).get();
 
   const userInfo = userRes.data[0] || {};
   const postData = {
@@ -61,15 +62,31 @@ exports.main = async (event) => {
     }
   });
 
-  const addRes = await db.collection('post').add({
-    data: postData
+  const transactionResult = await db.runTransaction(async (transaction) => {
+    const addRes = await transaction.collection('post').add({
+      data: postData
+    });
+
+    if (userInfo._id) {
+      const userPostList = Array.isArray(userInfo.user_post)
+        ? userInfo.user_post
+        : (userInfo.user_post ? [userInfo.user_post] : []);
+
+      await transaction.collection('user').doc(userInfo._id).update({
+        data: {
+          user_post: _.set([addRes._id].concat(userPostList))
+        }
+      });
+    }
+
+    return addRes;
   });
 
   return {
     code: 0,
     message: '发布成功',
     data: {
-      _id: addRes._id,
+      _id: transactionResult._id,
       ...postData
     }
   };

@@ -1,0 +1,138 @@
+<view class="page">
+  <view class="hero" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-bar">
+      <view class="back-btn" bindtap="onBack">‹</view>
+      <view class="nav-title">用户主页</view>
+      <view class="nav-action"></view>
+    </view>
+
+    <view wx:if="{{profileUser}}" class="profile">
+      <view class="avatar-block">
+        <view class="avatar-wrap">
+          <image class="avatar" src="{{profileUser.user_icon || '/pages/images/User.png'}}" mode="aspectFill"></image>
+          <view class="avatar-status"></view>
+        </view>
+
+        <view class="follow-row">
+          <view class="follow-item">
+            <view class="follow-count">{{followStats.following}}</view>
+            <view class="follow-label">关注</view>
+          </view>
+          <view class="follow-divider">|</view>
+          <view class="follow-item">
+            <view class="follow-count">{{followStats.fans}}</view>
+            <view class="follow-label">粉丝</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="profile-main">
+        <view class="name-row">
+          <view class="name">{{profileUser.user_name || '校园用户'}}</view>
+          <view wx:if="{{profileUser.studentTag}}" class="identity">{{profileUser.studentTag}}</view>
+        </view>
+        <view class="desc">{{profileUser.user_bio || '这个人还没有留下简介。'}}</view>
+      </view>
+
+      <view class="follow-action">
+        <button
+          wx:if="{{!isSelf}}"
+          class="follow-btn {{isFollowing ? 'following' : ''}}"
+          loading="{{followLoading}}"
+          bindtap="toggleFollow"
+        >{{isFollowing ? '已关注' : '+ 关注'}}</button>
+      </view>
+    </view>
+
+    <view wx:elif="{{!loading}}" class="profile empty-profile">
+      <view class="empty-title">用户不存在</view>
+    </view>
+
+    <view class="hero-decoration decoration-one"></view>
+    <view class="hero-decoration decoration-two"></view>
+  </view>
+
+  <view wx:if="{{profileUser}}" class="summary-card">
+    <view class="summary-item">
+      <view class="summary-value">{{isSelf || privacySettings.post_public ? summaryStats.postCount : '--'}}</view>
+      <view class="summary-label">帖子记录</view>
+    </view>
+    <view class="summary-item">
+      <view class="summary-value">{{summaryStats.likeReceived}}</view>
+      <view class="summary-label">获赞</view>
+    </view>
+    <view class="summary-item">
+      <view class="summary-value">{{isSelf || privacySettings.history_public ? summaryStats.historyCount : '--'}}</view>
+      <view class="summary-label">浏览历史</view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-head">
+      <view>
+        <view class="section-title">TA的内容</view>
+        <view class="section-subtitle">仅展示允许公开的记录内容</view>
+      </view>
+      <view class="section-more">
+        {{activeTab === 'posts' ? '帖子' : activeTab === 'likes' ? '点赞' : '历史'}}
+      </view>
+    </view>
+
+    <view class="content-card">
+      <view class="content-switch-row">
+        <view
+          wx:for="{{tabs}}"
+          wx:key="key"
+          class="content-switch-item {{activeTab === item.key ? 'active' : ''}}"
+          data-key="{{item.key}}"
+          bindtap="onTabChange"
+        >
+          {{item.label}}
+        </view>
+      </view>
+
+      <view class="content-panel">
+        <view wx:if="{{loading}}" class="empty-wrap">
+          <view class="empty-title">正在加载内容</view>
+          <view class="empty-desc">稍等一下，马上就好</view>
+        </view>
+
+        <view wx:elif="{{contentLocked}}" class="empty-wrap">
+          <view class="empty-title">该内容暂未公开</view>
+          <view class="empty-desc">对方将这个模块设为了私密，你暂时无法查看</view>
+        </view>
+
+        <block wx:elif="{{displayList.length}}">
+          <view
+            wx:for="{{displayList}}"
+            wx:key="id"
+            class="list-row"
+            data-id="{{item.id}}"
+            bindtap="toPostDetail"
+          >
+            <view class="list-mark">{{item.mark}}</view>
+            <view class="list-main">
+              <view class="list-top">
+                <view class="list-title">{{item.title}}</view>
+                <view class="post-tag">{{item.category}}</view>
+              </view>
+              <view class="list-desc">{{item.desc}}</view>
+              <view class="list-stats">
+                <view class="list-stat">点赞 {{item.likes}}</view>
+                <view class="list-stat">评论 {{item.comments}}</view>
+                <view class="list-stat">浏览 {{item.views}}</view>
+              </view>
+            </view>
+          </view>
+        </block>
+
+        <view wx:else class="empty-wrap">
+          <view class="empty-title">还没有相关内容</view>
+          <view class="empty-desc">
+            {{activeTab === 'history' ? '等 TA 产生新的浏览记录后，这里就会显示' : '等 TA 发布或点赞公开帖子后，这里就会显示'}}
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,10 +1,11 @@
 {
   "pages": [
-    "pages/create/create",
     "pages/Cir/Cir",
+    "pages/create/create",
     "pages/User/User",
     "pages/post_detail/post_detail",
-    "pages/user_detail/user_detail"
+    "pages/user_detail/user_detail",
+    "pages/user_profile/user_profile"
   ],
   "window": {
     "navigationStyle": "default",

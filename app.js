@@ -1,7 +1,14 @@
 // app.js
 App({
   globalData: {
-    statusBarHeight: 20
+    statusBarHeight: 20,
+    circleFeedCache: {
+      allPosts: [],
+      tasks: [],
+      postOffset: 0,
+      hasMorePosts: true,
+      hasLoadedOnce: false
+    }
   },
 
   onLaunch() {

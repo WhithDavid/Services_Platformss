@@ -67,9 +67,74 @@
       </view>
     </view>
 
+    <view class="card privacy-card">
+      <view class="card-head">
+        <view class="card-title">隐私设置</view>
+        <view class="card-subtitle">控制别人点击你头像进入主页后，是否能看到这些记录</view>
+      </view>
+
+      <view class="row privacy-row">
+        <view class="privacy-main">
+          <view class="privacy-label">我的帖子</view>
+          <view class="privacy-desc">公开后，别人可以看到你主页里的帖子记录</view>
+        </view>
+        <view class="privacy-action">
+          <view class="privacy-state {{profile.post_public ? 'is-public' : ''}}">
+            {{profile.post_public ? '公开' : '私密'}}
+          </view>
+          <switch
+            class="privacy-switch"
+            color="#62c48d"
+            checked="{{profile.post_public}}"
+            data-field="post_public"
+            bindchange="onPrivacySwitchChange"
+          />
+        </view>
+      </view>
+
+      <view class="row privacy-row">
+        <view class="privacy-main">
+          <view class="privacy-label">我的点赞</view>
+          <view class="privacy-desc">公开后，别人可以看到你点赞过的公开帖子</view>
+        </view>
+        <view class="privacy-action">
+          <view class="privacy-state {{profile.like_public ? 'is-public' : ''}}">
+            {{profile.like_public ? '公开' : '私密'}}
+          </view>
+          <switch
+            class="privacy-switch"
+            color="#62c48d"
+            checked="{{profile.like_public}}"
+            data-field="like_public"
+            bindchange="onPrivacySwitchChange"
+          />
+        </view>
+      </view>
+
+      <view class="row privacy-row">
+        <view class="privacy-main">
+          <view class="privacy-label">浏览历史</view>
+          <view class="privacy-desc">公开后，别人可以看到你最近浏览过的公开帖子</view>
+        </view>
+        <view class="privacy-action">
+          <view class="privacy-state {{profile.history_public ? 'is-public' : ''}}">
+            {{profile.history_public ? '公开' : '私密'}}
+          </view>
+          <switch
+            class="privacy-switch"
+            color="#62c48d"
+            checked="{{profile.history_public}}"
+            data-field="history_public"
+            bindchange="onPrivacySwitchChange"
+          />
+        </view>
+      </view>
+    </view>
+
     <button class="save-btn" bindtap="saveProfile" loading="{{saving}}" disabled="{{saving}}">
       {{saving ? '保存中...' : '保存'}}
     </button>
-    <view class="subtip">当前先保存到本地缓存，后面可以再接云数据库</view>
+    <button class="logout-btn" bindtap="outLogin">退出登录</button>
+    <view class="subtip">资料会同步到当前账号，下次打开仍可继续编辑</view>
   </view>
 </view>

@@ -10,7 +10,10 @@ const DEFAULT_PROFILE = {
   user_bio: '',
   user_major: '',
   user_campus: '育才校区',
-  studentTag: '校园用户'
+  studentTag: '校园用户',
+  post_public: true,
+  like_public: true,
+  history_public: true
 };
 
 Page({
@@ -56,7 +59,10 @@ Page({
         user_bio: storedUser.user_bio || '',
         user_major: storedUser.user_major || '',
         user_campus: storedUser.user_campus || DEFAULT_PROFILE.user_campus,
-        studentTag: storedUser.studentTag || DEFAULT_PROFILE.studentTag
+        studentTag: storedUser.studentTag || DEFAULT_PROFILE.studentTag,
+        post_public: storedUser.post_public !== false,
+        like_public: storedUser.like_public !== false,
+        history_public: storedUser.history_public !== false
       }
     });
   },
@@ -107,6 +113,15 @@ Page({
     const index = Number(e.detail.value);
     this.setData({
       'profile.user_campus': this.data.campusOptions[index]
+    });
+  },
+
+  onPrivacySwitchChange(e) {
+    const field = e.currentTarget.dataset.field;
+    if (!field) return;
+
+    this.setData({
+      [`profile.${field}`]: !!e.detail.value
     });
   },
 
@@ -194,5 +209,31 @@ Page({
       wx.hideLoading();
       this.setData({ saving: false });
     }
+  },
+
+  outLogin() {
+    wx.showModal({
+      title: '退出登录',
+      content: '退出后将返回“我的”页面。',
+      confirmText: '确认退出',
+      confirmColor: '#d85c5c',
+      success: (res) => {
+        if (!res.confirm) return;
+
+        wx.removeStorageSync(USER_STORAGE_KEY);
+        wx.removeStorageSync(LEGACY_USER_STORAGE_KEY);
+
+        wx.showToast({
+          title: '退出成功',
+          icon: 'success'
+        });
+
+        setTimeout(() => {
+          wx.switchTab({
+            url: '/pages/User/User'
+          });
+        }, 800);
+      }
+    });
   }
 });
