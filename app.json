@@ -1,10 +1,14 @@
 {
   "pages": [
     "pages/Cir/Cir",
-    "pages/post_detail/post_detail",
+    "pages/create/create",
+    "pages/rating/rating",
+    "pages/rating_detail/rating_detail",
+    "pages/rating_admin/rating_admin",
     "pages/User/User",
-    "pages/create/create"
-    
+    "pages/post_detail/post_detail",
+    "pages/user_detail/user_detail",
+    "pages/user_profile/user_profile"
   ],
   "window": {
     "navigationStyle": "default",
@@ -29,7 +33,7 @@
       },
       {
         "iconPath": "pages/images/create.png",
-        "selectedIconPath": "pages/images/User_select.png",
+        "selectedIconPath": "pages/images/create.png",
         "text": "发布",
         "pagePath": "pages/create/create"
       },

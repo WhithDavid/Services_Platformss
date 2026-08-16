@@ -1,78 +1,169 @@
-<view wx:if="{{userInfo}}" class="back_img">
-  <image src="{{userInfo.bgUrl}}" mode="aspectFill"></image>
-</view>
-<view wx:else class="back_img">
-  <image src="{{unLoginUrl_bg}}" mode="aspectFill"></image>
-</view>
-<view style="height: 650rpx;width: 100%;"></view>
-<view wx:if="{{userInfo}}">
-<view class="hand_img">
-  <view  style="width: 100%; height: 50rpx;"></view>
-  <view class="hand" plain >
-    <image bind:tap="toDetail" src="{{userInfo.imgHand}}" style="width: 200rpx;height: 200rpx;border-radius: 50%; border:none; margin-bottom:150rpx ;" mode="aspectFill"></image>
-  </view>
-</view>
-<view class="hand_name">{{userInfo.Name}}</view>
-<scroll-view style="height: 75vh;width: 100%; background-color: rgba(255, 255, 255, 0.91); " scroll-y bounces enhanced>
-  
-  <view style="width: 100%;height: 50rpx;"></view>
-  <view class="list">
-    <view class="list_1">
-      <view bind:tap="To_Love" class="list_content" plain>
-      <view style="height: 70%;width: 100%;">
-        <image style="height: 90%; width: 90%; padding-left: 8%;" src="/image/love1.png" mode="aspectFill"></image>
+<view class="page">
+  <view class="hero" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-title">我的</view>
+
+    <view class="profile">
+      <view class="avatar-block">
+        <view class="avatar-wrap" bindtap="onProfileTap">
+          <image class="avatar" src="{{userInfo ? userInfo.user_icon : unLoginUrl}}" mode="aspectFill"></image>
+          <view class="{{userInfo ? 'avatar-status online' : 'avatar-status'}}"></view>
+        </view>
+
+        <view class="follow-row">
+          <view class="follow-item">
+            <view class="follow-count">{{userInfo ? followStats.following : '--'}}</view>
+            <view class="follow-label">关注</view>
+          </view>
+          <view class="follow-divider">|</view>
+          <view class="follow-item">
+            <view class="follow-count">{{userInfo ? followStats.fans : '--'}}</view>
+            <view class="follow-label">粉丝</view>
+          </view>
+        </view>
       </view>
-      <view style="height: 30%;width: 100%;">
-        <view style="height: 30%;width: 100%;display: flex;align-items: center;justify-content: center;">收 藏</view>
+
+      <view class="profile-main">
+        <view class="name-row">
+          <view class="name">{{userInfo ? userInfo.user_name : '登录账号'}}</view>
+          <view wx:if="{{userInfo}}" class="identity">{{userInfo.studentTag}}</view>
+        </view>
+        <view class="desc" catchtap="editBio">
+          {{userInfo ? (userInfo.user_bio || '点击添加个人简介') : '登录后查看个人内容和悬赏任务'}}
+        </view>
       </view>
-      </view>
-      <!--  -->
-      <view class="list_content" plain bind:tap="To_LiShi">
-      <view style="height: 70%;width: 100%;">
-        <image style="height: 90%; width: 90%; padding-left: 8%;" src="/image/LiShi.png" mode="aspectFit"></image>
-      </view>
-      <view style="height: 30%;width: 100%;">
-        <view style="height: 30%;width: 100%;display: flex;align-items: center;justify-content: center;">历 史</view>
-      </view>
-      </view>
-      <!--  -->
-      <view class="list_content" plain bind:tap="toDetail">
-      <view style="height: 70%;width: 100%;">
-        <image style="height: 60%; width: 85%; padding-left: 8%;" src="/image/My.png" mode="aspectFit"></image>
-      </view>
-      <view style="height: 30%;width: 100%;">
-        <view style="height: 30%;width: 100%;display: flex;align-items: center;justify-content: center;">我 的</view>
-      </view>
-      </view>
-      <!-- end -->
+
+      <view class="profile-arrow" bindtap="onProfileTap">›</view>
     </view>
-    
-    
+
+    <view class="hero-decoration decoration-one"></view>
+    <view class="hero-decoration decoration-two"></view>
   </view>
-  <view style="width: 100%;height: 300rpx;"></view>
-  
-  <button style="width: 70%;" type="primary" open-type="contact">在线客服</button>
-<button style="width: 70%;" type="primary" open-type="openSetting">授权设置</button>
-<button style="width: 70%;" type="primary" open-type="feedback">投诉建议</button>
-<button style="width: 70%;" wx:if="{{userInfo}}" type="primary" bindtap="outLogin">退出登录</button>
-</scroll-view>
 
-
-</view>
-<view wx:else>
-  <view class="hand_img">
-  <view style="width: 100%; height: 50rpx;"></view>
-  <view class="hand" plain>
-    <image bind:tap="toDetail" src="{{unLoginUrl}}" style="width: 200rpx;height: 200rpx;border-radius: 50%; border:none; margin-bottom:150rpx ;"></image>
+  <view class="content-card task-card">
+    <view
+      class="task-item"
+      wx:for="{{taskEntries}}"
+      wx:key="key"
+      data-key="{{item.key}}"
+      bindtap="onTaskTap"
+    >
+      <view class="task-icon">{{item.icon}}</view>
+      <view class="task-count">{{userInfo ? item.count : '--'}}</view>
+      <view class="task-label">{{item.label}}</view>
+    </view>
   </view>
-</view>
 
-<scroll-view style="height: 75vh;width: 100%; background-color: rgba(255, 255, 255, 0.91); " scroll-y bounces enhanced>
-  <button style="width: 70%;" type="primary" bindtap="wxLogin">微信登录</button>
-  <button style="width: 70%;" type="primary" open-type="contact">在线客服</button>
-<button style="width: 70%;" type="primary" open-type="openSetting">授权设置</button>
-<button style="width: 70%;" type="primary" open-type="feedback">投诉建议</button>
-</scroll-view>
-</view>
+  <view class="section">
+    <view class="section-head">
+      <view>
+        <view class="section-title">我的内容</view>
+        <view class="section-subtitle">点击不同内容切换下方列表</view>
+      </view>
+      <view class="section-more">可切换</view>
+    </view>
 
-<!-- <button open-type="share">分享转发</button> -->
+    <view class="content-card content-list-card">
+      <view class="content-switch-row">
+        <view
+          wx:for="{{contentTabs}}"
+          wx:key="key"
+          class="content-switch-item {{activeContentTab === item.key ? 'active' : ''}}"
+          data-key="{{item.key}}"
+          bindtap="onContentTabChange"
+        >
+          {{item.label}}
+        </view>
+      </view>
+
+      <view class="content-panel">
+        <block wx:if="{{!userInfo}}">
+          <view class="empty-wrap">
+            <view class="empty-title">登录后查看个人内容</view>
+            <view class="empty-desc">帖子、点赞和浏览记录会在这里统一展示</view>
+          </view>
+        </block>
+
+        <block wx:elif="{{contentLoading}}">
+          <view class="empty-wrap">
+            <view class="empty-title">正在加载内容</view>
+            <view class="empty-desc">稍等一下，马上就好</view>
+          </view>
+        </block>
+
+        <block wx:elif="{{displayContentList.length}}">
+          <view
+            wx:for="{{displayContentList}}"
+            wx:key="id"
+            class="list-row"
+            data-id="{{item.id}}"
+            bindtap="onContentItemTap"
+          >
+            <view class="list-mark">{{activeContentMark}}</view>
+            <view class="list-main">
+              <view class="list-head">
+                <view class="list-title">{{item.title}}</view>
+                <view wx:if="{{activeContentTab === 'posts'}}" class="post-tools" catchtap="closePostMenu">
+                  <view class="status-tag {{item.statusClassName}}">{{item.statusLabel}}</view>
+                  <view
+                    class="more-btn"
+                    data-id="{{item.id}}"
+                    catchtap="togglePostMenu"
+                  >•••</view>
+
+                  <view wx:if="{{activeManagePostId === item.id}}" class="post-menu">
+                    <view
+                      class="menu-item"
+                      data-id="{{item.id}}"
+                      data-action="public"
+                      catchtap="onManagePostAction"
+                    >设为公开</view>
+                    <view
+                      class="menu-item"
+                      data-id="{{item.id}}"
+                      data-action="private"
+                      catchtap="onManagePostAction"
+                    >仅自己可见</view>
+                    <view
+                      class="menu-item danger"
+                      data-id="{{item.id}}"
+                      data-action="delete"
+                      catchtap="onManagePostAction"
+                    >删除帖子</view>
+                  </view>
+                </view>
+              </view>
+              <view class="list-desc">{{item.desc}}</view>
+              <view class="list-stats">
+                <view class="list-stat">点赞 {{item.likes}}</view>
+                <view class="list-stat">评论 {{item.comments}}</view>
+                <view class="list-stat">浏览 {{item.views}}</view>
+              </view>
+            </view>
+          </view>
+        </block>
+
+        <block wx:else>
+          <view class="empty-wrap">
+            <view class="empty-title">还没有相关内容</view>
+            <view class="empty-desc">等你发布、点赞或浏览后，这里就会出现记录</view>
+          </view>
+        </block>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{showDeleteConfirm}}" class="modal-mask" catchtap="cancelDeletePost">
+    <view class="modal-card" catchtap="closePostMenu">
+      <view class="modal-body">
+        <view class="modal-title">删除帖子</view>
+        <view class="modal-text">删除帖子之后将无法恢复，是否继续</view>
+      </view>
+      <view class="modal-actions">
+        <view class="modal-btn" catchtap="cancelDeletePost">取消</view>
+        <view class="modal-btn danger" catchtap="confirmDeletePost">继续删除</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="version">校园生活圈 · 让校园生活更简单</view>
+</view>

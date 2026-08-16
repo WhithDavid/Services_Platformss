@@ -1,0 +1,140 @@
+<view class="page">
+  <view class="hero" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav">
+      <view class="nav-btn" bindtap="onBack">‹</view>
+      <view class="nav-title">个人资料</view>
+      <view class="nav-btn nav-placeholder"></view>
+    </view>
+
+    <view class="profile">
+      <image class="avatar" src="{{profile.user_icon}}" mode="aspectFill"></image>
+      <view class="name">{{profile.user_name}}</view>
+      <view class="tip">完善基本信息，让别人更容易认识你</view>
+      <view class="edit-avatar" bindtap="onChooseAvatar">更换头像</view>
+    </view>
+  </view>
+
+  <view class="content">
+    <view class="card">
+      <view class="row">
+        <view class="label">昵称</view>
+        <input
+          class="input"
+          placeholder="请输入昵称"
+          maxlength="12"
+          value="{{profile.user_name}}"
+          data-field="user_name"
+          bindinput="onInputChange"
+        />
+      </view>
+
+      <view class="row">
+        <view class="label">性别</view>
+        <picker class="picker" mode="selector" range="{{genderOptions}}" bindchange="onGenderChange">
+          <view class="picker-value">{{profile.user_gender}}</view>
+        </picker>
+      </view>
+
+      <view class="row row-textarea">
+        <view class="label">简介</view>
+        <textarea
+          class="textarea"
+          placeholder="介绍一下自己"
+          maxlength="50"
+          value="{{profile.user_bio}}"
+          data-field="user_bio"
+          bindinput="onInputChange"
+        ></textarea>
+      </view>
+
+      <view class="row">
+        <view class="label">院系专业</view>
+        <input
+          class="input"
+          placeholder="请输入院系专业"
+          maxlength="24"
+          value="{{profile.user_major}}"
+          data-field="user_major"
+          bindinput="onInputChange"
+        />
+      </view>
+
+      <view class="row">
+        <view class="label">校区</view>
+        <picker class="picker" mode="selector" range="{{campusOptions}}" bindchange="onCampusChange">
+          <view class="picker-value">{{profile.user_campus}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="card privacy-card">
+      <view class="card-head">
+        <view class="card-title">隐私设置</view>
+        <view class="card-subtitle">控制别人点击你头像进入主页后，是否能看到这些记录</view>
+      </view>
+
+      <view class="row privacy-row">
+        <view class="privacy-main">
+          <view class="privacy-label">我的帖子</view>
+          <view class="privacy-desc">公开后，别人可以看到你主页里的帖子记录</view>
+        </view>
+        <view class="privacy-action">
+          <view class="privacy-state {{profile.post_public ? 'is-public' : ''}}">
+            {{profile.post_public ? '公开' : '私密'}}
+          </view>
+          <switch
+            class="privacy-switch"
+            color="#62c48d"
+            checked="{{profile.post_public}}"
+            data-field="post_public"
+            bindchange="onPrivacySwitchChange"
+          />
+        </view>
+      </view>
+
+      <view class="row privacy-row">
+        <view class="privacy-main">
+          <view class="privacy-label">我的点赞</view>
+          <view class="privacy-desc">公开后，别人可以看到你点赞过的公开帖子</view>
+        </view>
+        <view class="privacy-action">
+          <view class="privacy-state {{profile.like_public ? 'is-public' : ''}}">
+            {{profile.like_public ? '公开' : '私密'}}
+          </view>
+          <switch
+            class="privacy-switch"
+            color="#62c48d"
+            checked="{{profile.like_public}}"
+            data-field="like_public"
+            bindchange="onPrivacySwitchChange"
+          />
+        </view>
+      </view>
+
+      <view class="row privacy-row">
+        <view class="privacy-main">
+          <view class="privacy-label">浏览历史</view>
+          <view class="privacy-desc">公开后，别人可以看到你最近浏览过的公开帖子</view>
+        </view>
+        <view class="privacy-action">
+          <view class="privacy-state {{profile.history_public ? 'is-public' : ''}}">
+            {{profile.history_public ? '公开' : '私密'}}
+          </view>
+          <switch
+            class="privacy-switch"
+            color="#62c48d"
+            checked="{{profile.history_public}}"
+            data-field="history_public"
+            bindchange="onPrivacySwitchChange"
+          />
+        </view>
+      </view>
+    </view>
+
+    <button class="save-btn" bindtap="saveProfile" loading="{{saving}}" disabled="{{saving}}">
+      {{saving ? '保存中...' : '保存'}}
+    </button>
+    <button class="logout-btn" bindtap="outLogin">退出登录</button>
+    <view class="subtip">资料会同步到当前账号，下次打开仍可继续编辑</view>
+  </view>
+</view>

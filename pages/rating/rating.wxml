@@ -1,0 +1,63 @@
+<view class="page">
+  <view class="hero" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav">
+      <view class="nav-btn" bindtap="onBack">‹</view>
+      <view class="nav-title">校园评分</view>
+      <view class="nav-actions"><view wx:if="{{isAdmin}}" class="admin-btn" bindtap="openAdmin">审核</view><view class="nav-btn add-btn" bindtap="openCreate">＋</view></view>
+    </view>
+    <view class="hero-copy">
+      <view class="eyebrow">CAMPUS REVIEW</view>
+      <view class="hero-title">校园口碑榜</view>
+      <view class="hero-subtitle">看看同学们怎么评价身边的人和事</view>
+    </view>
+    <view class="search-bar">
+      <view class="search-icon"></view>
+      <input class="search-input" placeholder="搜索食堂、商铺、设施或校园人物" value="{{keyword}}" bindinput="onSearchInput" confirm-type="search" bindconfirm="onSearch" />
+      <button class="search-btn" size="mini" bindtap="onSearch">搜索</button>
+    </view>
+  </view>
+
+  <scroll-view class="category-scroll" scroll-x show-scrollbar="{{false}}">
+    <view class="category-list">
+      <view wx:for="{{categories}}" wx:key="*this" class="category-pill {{activeCategory === item ? 'active' : ''}}" data-category="{{item}}" bindtap="selectCategory">{{item}}</view>
+    </view>
+  </scroll-view>
+
+  <view class="section-head">
+    <view>
+      <view class="section-title">热门评分对象</view>
+      <view class="section-subtitle">按参与人数和最新评价排序</view>
+    </view>
+    <view class="count-label">{{subjects.length}} 个</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="empty"><view class="loading-dot"></view><view class="empty-title">正在加载评分</view></view>
+  <view wx:elif="{{!subjects.length}}" class="empty"><view class="empty-icon">评</view><view class="empty-title">还没有评分对象</view><view class="empty-subtitle">点击右上角，创建第一个校园评分对象</view></view>
+  <view wx:else class="subject-list">
+    <view class="subject-card" wx:for="{{subjects}}" wx:key="_id" data-id="{{item._id}}" bindtap="openDetail">
+      <view class="subject-icon type-{{item.category}}">{{item.category === '食堂美食' ? '食' : item.category === '校园商铺' ? '店' : item.category === '宿舍设施' ? '舍' : item.category === '流浪猫狗' ? '猫' : item.category === '校园人物' ? '人' : '评'}}</view>
+      <view class="subject-main">
+        <view class="subject-title">{{item.name}}</view>
+        <view class="subject-meta">{{item.category}}<text wx:if="{{item.location}}"> · {{item.location}}</text></view>
+        <view class="subject-desc">{{item.description || '还没有简介，去看看同学们的评价吧'}}</view>
+        <view class="subject-quote" wx:if="{{item.latest_comment}}">“{{item.latest_comment}}”</view>
+      </view>
+      <view class="score-box"><view class="score">{{item.average_score || '—'}}</view><view class="score-label">{{item.rating_count || 0}} 人评分</view></view>
+    </view>
+  </view>
+
+  <view wx:if="{{showCreate}}" class="modal-mask" catchtap="closeCreate">
+    <view class="create-modal" catchtap="noop">
+      <view class="modal-head"><view class="modal-title">创建评分对象</view><view class="modal-close" bindtap="closeCreate">×</view></view>
+      <view class="modal-tip">提交后由管理员审核，通过后才会公开显示</view>
+      <view class="field-label">对象名称 <text>*</text></view>
+      <input class="field-input" maxlength="40" placeholder="例如：一食堂麻辣香锅、北区流浪猫" value="{{form.name}}" data-field="name" bindinput="onFormInput" />
+      <view class="field-label">对象分类 <text>*</text></view>
+      <scroll-view class="form-category-scroll" scroll-x show-scrollbar="{{false}}"><view class="form-category-list"><view wx:for="{{categories}}" wx:if="{{item !== '全部'}}" wx:key="*this" class="form-category {{form.category === item ? 'active' : ''}}" data-category="{{item}}" bindtap="selectFormCategory">{{item}}</view></view></scroll-view>
+      <view class="field-label">位置或补充说明</view>
+      <input class="field-input" maxlength="60" placeholder="例如：南区一食堂二楼" value="{{form.location}}" data-field="location" bindinput="onFormInput" />
+      <textarea class="content-input" maxlength="120" placeholder="简单介绍一下这个评分对象" value="{{form.description}}" data-field="description" bindinput="onFormInput"></textarea>
+      <button class="submit-btn" loading="{{submitting}}" bindtap="submitCreate">提交审核</button>
+    </view>
+  </view>
+</view>
