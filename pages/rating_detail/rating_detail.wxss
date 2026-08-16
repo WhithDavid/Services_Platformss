@@ -1,0 +1,21 @@
+.page { min-height: 100vh; background: #f8f6f5; color: #332e31; padding-bottom: 50rpx; }
+.hero { padding-bottom: 32rpx; background: linear-gradient(145deg, #f7c096 0%, #f4a77e 65%, #ee947a 100%); border-radius: 0 0 38rpx 38rpx; }
+.nav { height: 88rpx; padding: 0 28rpx; display: flex; align-items: center; justify-content: space-between; }
+.nav-btn, .nav-placeholder { width: 62rpx; height: 62rpx; }
+.nav-btn { border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.24); color: #44373a; font-size: 48rpx; }
+.nav-title { font-size: 34rpx; font-weight: 700; }
+.subject-head { display: flex; align-items: center; padding: 26rpx 36rpx 20rpx; }
+.subject-icon { width: 116rpx; height: 116rpx; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 30rpx; background: rgba(255,255,255,.6); color: #b55d4e; font-size: 48rpx; font-weight: 800; }
+.subject-info { min-width: 0; margin-left: 24rpx; }
+.subject-name { font-size: 38rpx; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.subject-meta { margin-top: 8rpx; color: #6d5351; font-size: 22rpx; }
+.subject-desc { margin-top: 12rpx; color: #775f5b; font-size: 22rpx; line-height: 1.45; }
+.score-summary { margin: 8rpx 30rpx 0; padding: 22rpx 28rpx; display: flex; align-items: center; border-radius: 22rpx; background: rgba(255,255,255,.68); }
+.score-main { color: #d86f59; font-size: 76rpx; font-weight: 800; line-height: 1; }
+.score-copy { margin-left: 24rpx; }.score-caption { font-size: 25rpx; font-weight: 700; }.score-count { margin-top: 8rpx; color: #907975; font-size: 21rpx; }
+.rating-panel { margin: 24rpx 26rpx 0; padding: 26rpx; border-radius: 24rpx; background: #fff; box-shadow: 0 8rpx 24rpx rgba(73,55,58,.05); }
+.panel-title { font-size: 30rpx; font-weight: 700; }.slider-row { display: flex; align-items: center; margin-top: 18rpx; color: #ad9a96; font-size: 22rpx; }.score-slider { flex: 1; }.selected-score { color: #e27d60; text-align: center; font-size: 48rpx; font-weight: 800; }.selected-score text { font-size: 22rpx; }
+.comment-input { width: 100%; min-height: 140rpx; box-sizing: border-box; margin-top: 18rpx; padding: 18rpx; border-radius: 14rpx; background: #f7f3f2; font-size: 24rpx; }
+.submit-btn { margin-top: 20rpx; border-radius: 16rpx; background: #302a2d; color: #fff; font-size: 27rpx; }.submit-btn[disabled] { background: #c7bebd; }
+.comments-section { padding: 34rpx 28rpx; }.section-title { font-size: 32rpx; font-weight: 700; }.section-title text { color: #a99b99; font-size: 22rpx; font-weight: 400; margin-left: 8rpx; }.empty-comment { padding: 60rpx 0; text-align: center; color: #aaa0a0; font-size: 22rpx; }
+.comment-card { display: flex; padding: 24rpx 0; border-bottom: 1rpx solid #eee8e7; }.avatar { width: 62rpx; height: 62rpx; border-radius: 50%; background: #f2d8cd; }.comment-main { flex: 1; min-width: 0; margin-left: 18rpx; }.comment-head { display: flex; justify-content: space-between; }.comment-user { font-size: 25rpx; font-weight: 600; }.comment-score { color: #dc7b62; font-size: 24rpx; font-weight: 700; }.comment-time { margin-top: 6rpx; color: #ada1a0; font-size: 19rpx; }.comment-text { margin-top: 12rpx; color: #5c5354; font-size: 24rpx; line-height: 1.55; }

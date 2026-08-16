@@ -2,6 +2,9 @@
   "pages": [
     "pages/Cir/Cir",
     "pages/create/create",
+    "pages/rating/rating",
+    "pages/rating_detail/rating_detail",
+    "pages/rating_admin/rating_admin",
     "pages/User/User",
     "pages/post_detail/post_detail",
     "pages/user_detail/user_detail",
