@@ -1,8 +1,8 @@
 {
   "compileType": "miniprogram",
-  "cloudfunctionRoot": "cloud",
-  "libVersion": "trial",
-  "cloudbaseRoot": "cloud",
+  "cloudfunctionRoot": "cloud/",
+  "libVersion": "2.30.4",
+  "cloudbaseRoot": "cloud/",
   "packOptions": {
     "ignore": [],
     "include": []
@@ -19,7 +19,19 @@
       "ignore": [],
       "disablePlugins": [],
       "outputPath": ""
-    }
+    },
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "packNpmManually": false,
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true
   },
   "condition": {},
   "editorSetting": {

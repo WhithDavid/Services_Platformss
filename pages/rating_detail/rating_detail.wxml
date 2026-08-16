@@ -1,0 +1,20 @@
+<view class="page">
+  <view class="hero" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav"><view class="nav-btn" bindtap="onBack">‹</view><view class="nav-title">评分详情</view><view class="nav-placeholder"></view></view>
+    <view wx:if="{{subject}}" class="subject-head">
+      <view class="subject-icon">{{subject.category === '食堂美食' ? '食' : subject.category === '校园商铺' ? '店' : subject.category === '宿舍设施' ? '舍' : subject.category === '流浪猫狗' ? '猫' : subject.category === '校园人物' ? '人' : '评'}}</view>
+      <view class="subject-info"><view class="subject-name">{{subject.name}}</view><view class="subject-meta">{{subject.category}}<text wx:if="{{subject.location}}"> · {{subject.location}}</text></view><view class="subject-desc">{{subject.description}}</view></view>
+    </view>
+    <view wx:if="{{subject}}" class="score-summary"><view class="score-main">{{subject.average_score || '—'}}</view><view class="score-copy"><view class="score-caption">校园综合评分</view><view class="score-count">{{subject.rating_count || 0}} 人参与评分</view></view></view>
+  </view>
+
+  <view wx:if="{{subject}}" class="rating-panel">
+    <view class="panel-title">给它打个分</view>
+    <view class="slider-row"><text>0</text><slider class="score-slider" min="0" max="10" step="0.1" value="{{score}}" activeColor="#e78666" backgroundColor="#f0d5cb" block-color="#e78666" bindchange="onScoreChange"></slider><text>10</text></view>
+    <view class="selected-score">{{scoreDisplay}} <text>分</text></view>
+    <textarea class="comment-input" maxlength="500" placeholder="说说你的真实体验，评论会展示你的校园账号" value="{{comment}}" bindinput="onCommentInput"></textarea>
+    <button class="submit-btn" disabled="{{hasRated}}" loading="{{submitting}}" bindtap="submitRating">{{hasRated ? '你已评价' : '提交我的评分'}}</button>
+  </view>
+
+  <view wx:if="{{subject}}" class="comments-section"><view class="section-title">同学评价 <text>{{records.length}}</text></view><view wx:if="{{!records.length}}" class="empty-comment">还没有评价，来做第一个分享体验的人</view><view wx:for="{{records}}" wx:key="_id" class="comment-card"><image class="avatar" src="{{item.user_icon}}" mode="aspectFill"></image><view class="comment-main"><view class="comment-head"><view class="comment-user">{{item.user_name}}</view><view class="comment-score">{{item.score}} 分</view></view><view class="comment-time">{{item.created_at}}</view><view class="comment-text">{{item.comment}}</view></view></view></view>
+</view>

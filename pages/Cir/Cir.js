@@ -315,6 +315,13 @@ Page({
 
   clic(e) {
     const index = Number(e.currentTarget.dataset.nid);
+    const category = this.data.handle_navigation[index];
+    if (category === '校园评分') {
+      wx.navigateTo({
+        url: '/pages/rating/rating'
+      });
+      return;
+    }
     this.setData({
       handle_navigation_index: index
     }, () => this.applyFilters());

@@ -72,8 +72,15 @@ Page({
   },
 
   selectPostCategory(e) {
+    const category = e.currentTarget.dataset.category;
+    if (category === '校园评分') {
+      wx.navigateTo({
+        url: '/pages/rating/rating?create=1'
+      });
+      return;
+    }
     this.setData({
-      selectedPostCategory: e.currentTarget.dataset.category
+      selectedPostCategory: category
     });
   },
 
